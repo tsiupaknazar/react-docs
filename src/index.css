@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  @apply bg-primary text-primary;
+}
+.dark {
+  --color-bg-primary: #242424;
+  --color-bg-secondary: #283141;
+  --color-text-primary: #dbdbdb;
+  --color-text-secondary: #e2e8f0;
+  --color-text-accent: #81e6d9;
+  --color-bg-input: #4a5361;
+  --color-bg-button: #81e6d9;
+  --color-doc: #4b5563;
+  --color-doc-hover: #E4E7EB;
+}
+
+.light {
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #edf2f7;
+  --color-text-primary: #242424;
+  --color-text-secondary: #242424;
+  --color-text-accent: #2363EB;
+  --color-bg-input: #edf2f7;
+  --color-bg-button: #2363EB;
+  --color-doc: #e4e7eb;
+  --color-doc-hover: #2363EB;
+}
