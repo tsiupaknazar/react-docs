@@ -61,10 +61,6 @@ const EditorPage = () => {
             autosave_restore_when_empty: false,
             autosave_retention: "2m",
             image_advtab: true,
-            image_list: [
-              { title: "My page 1", value: "https://www.tiny.cloud" },
-              { title: "My page 2", value: "http://www.moxiecode.com" },
-            ],
             importcss_append: true,
             height: 900,
             content_style: `
@@ -80,7 +76,7 @@ const EditorPage = () => {
               }
     
               body {
-                background-color: --var(bg-color);
+                background-color: #fff;
                 box-sizing: border-box;
                 margin: 1rem auto 0;
                 max-width: 820px;

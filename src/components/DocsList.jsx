@@ -26,19 +26,17 @@ const DocsList = () => {
     return () => unsub();
   }, [user?.uid]);
   return (
-    <div className="w-auto flex flex-col md:flex-row md:flex-wrap gap-6 border border-red-700">
-      {/* {userDoc.length === 0 ? (
-        <div className="w-full text-center py-5">No Documents</div>
+    <div className="w-auto flex flex-wrap gap-6 justify-between border border-red-700">
+      {userDoc?.length === 0 ? (
+        <div className="w-full text-center py-5">
+          No Documents. Create your first document by click on{" "}
+          <span className="text-blue-500">Create New</span> button
+        </div>
       ) : (
         ""
-      )} */}
+      )}
       {userDoc?.map((doc) => (
-        <DocRow
-          id={doc?.id}
-          key={doc?.id}
-          name={doc?.name}
-          date={doc?.time}
-        />
+        <DocRow id={doc?.id} key={doc?.id} name={doc?.name} date={doc?.time} />
       ))}
     </div>
   );
