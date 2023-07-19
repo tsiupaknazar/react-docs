@@ -1,63 +1,7 @@
-import { useContext, useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-
-import { firestore } from "../firebase/firebase";
-import { doc, getDoc, updateDoc } from "@firebase/firestore";
-
-import Header from "../components/header/Header";
-import { AuthContext } from "../context/AuthContext";
-
 import { Editor } from "@tinymce/tinymce-react";
-import { ToastContainer, toast } from 'react-toastify';
-import { Description } from "@mui/icons-material";
+import Header from "../header/Header";
 
-const EditorPage = () => {
-  const { user } = useContext(AuthContext);
-  const [userDoc, setUserDoc] = useState(null);
-
-  // const navigate = useNavigate();
-  const { id } = useParams();
-
-  const editorRef = useRef(null);
-
-  const handleSave = async () => {
-    try {
-      const docRef = doc(
-        firestore,
-        "userDocs",
-        `${user?.uid}`,
-        "docs",
-        `${id}`
-      );
-      await updateDoc(docRef, { content: editorRef.current.getContent() });
-      toast.success("Document successfully saved!");
-    } catch (error) {
-      toast.error("Error saving document");
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    const getUserDoc = async () => {
-      const docRef = doc(
-        firestore,
-        "userDocs",
-        `${user?.uid}`,
-        "docs",
-        `${id}`
-      );
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setUserDoc(data);
-        if (data.content) {
-          editorRef.current.setContent(data.content);
-        }
-      }
-    };
-    getUserDoc();
-  }, [id, user?.uid]);
-
+const TextEditor = () => {
   return (
     <div>
       <Header docName={userDoc?.name} handleSave={handleSave} />
@@ -110,9 +54,8 @@ const EditorPage = () => {
           }}
         />
       </div>
-      <ToastContainer hideProgressBar={true} autoClose={3000} />
     </div>
   );
 };
 
-export default EditorPage;
+export default TextEditor;

@@ -8,8 +8,9 @@ import { auth } from "../../firebase/firebase";
 import ThemeToggle from "../common/ThemeToggle";
 
 import Search from "./Search";
+import SaveDocBtn from "./SaveDocBtn";
 
-const Header = ({docName}) => {
+const Header = ({ docName, handleSave }) => {
   const { user, setUser } = useContext(AuthContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -28,9 +29,9 @@ const Header = ({docName}) => {
   const navigate = useNavigate();
 
   const logout = () => {
-    navigate("/login");
     signOut(auth);
     setUser(null);
+    navigate("/login");
   };
   return (
     <>
@@ -38,7 +39,12 @@ const Header = ({docName}) => {
         <div className="flex items-center justify-center">
           <Link to="/">
             <Description
-              sx={{ color: "#4385F3", width: "40px", height: "40px", cursor: "pointer" }}
+              sx={{
+                color: "#4385F3",
+                width: "40px",
+                height: "40px",
+                cursor: "pointer",
+              }}
             />
           </Link>
           {location.pathname === "/" ? (
@@ -46,19 +52,28 @@ const Header = ({docName}) => {
               Docs
             </h1>
           ) : (
-            <h1 className="hidden md:inline-flex ml-2 text-primary text-2xl">
-              {docName || null}
-            </h1>
+            <>
+              <h1 className="hidden md:inline-flex ml-2 text-primary text-2xl">
+                {docName || null}
+              </h1>
+            </>
           )}
         </div>
         {location.pathname === "/" ? <Search /> : ""}
-        <img
-          src={user?.photoURL}
-          alt={user?.displayName}
-          title={user?.displayName}
-          className="cursor-pointer h-10 w-10 rounded-full"
-          onClick={handleClick}
-        />
+        <div className="flex items-center justify-around">
+          {location.pathname !== "/" ? (
+            <SaveDocBtn handleSave={handleSave} />
+          ) : (
+            ""
+          )}
+          <img
+            src={user?.photoURL}
+            alt={user?.displayName}
+            title={user?.displayName}
+            className="cursor-pointer h-10 w-10 rounded-full"
+            onClick={handleClick}
+          />
+        </div>
       </header>
       <Menu
         anchorEl={anchorEl}

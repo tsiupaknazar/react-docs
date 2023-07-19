@@ -13,9 +13,9 @@ import {
 import { AuthContext } from "../context/AuthContext";
 
 import Header from "../components/header/Header";
-import DocRow from "../components/DocRow";
-import Loader from "../components/Loader";
-import DocsList from "../components/DocsList";
+import DocRow from "../components/docs/DocRow";
+import Loader from "../components/loader/Loader";
+import DocsList from "../components/docs/DocsList";
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -43,6 +43,12 @@ const Home = () => {
     );
     navigate(`/doc/${docRef?.id}`);
   };
+
+  useEffect(() => {
+    if (user === null) {
+      navigate("/login");
+    }
+  }, [user]);
   return (
     <div>
       <Header />

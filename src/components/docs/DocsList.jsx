@@ -1,8 +1,8 @@
 import { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 
 import { collection, onSnapshot } from "firebase/firestore";
-import { firestore } from "../firebase/firebase";
+import { firestore } from "../../firebase/firebase";
 
 import DocRow from "./DocRow";
 
@@ -26,7 +26,7 @@ const DocsList = () => {
     return () => unsub();
   }, [user?.uid]);
   return (
-    <div className="w-auto flex flex-wrap gap-6 justify-between border border-red-700">
+    <div className="flex flex-wrap gap-6 max-sm:justify-center sm:justify-center">
       {userDoc?.length === 0 ? (
         <div className="w-full text-center py-5">
           No Documents. Create your first document by click on{" "}

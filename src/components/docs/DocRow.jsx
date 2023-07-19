@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
-import { firestore } from "../firebase/firebase";
+import { firestore } from "../../firebase/firebase";
 
 import { Article, MoreVert } from "@mui/icons-material";
 import { Link } from "react-router-dom";
