@@ -10,7 +10,7 @@ import ThemeToggle from "../common/ThemeToggle";
 import Search from "./Search";
 import SaveDocBtn from "./SaveDocBtn";
 
-const Header = ({ docName, handleSave }) => {
+const Header = ({ docName, handleSave, setSearchInput }) => {
   const { user, setUser } = useContext(AuthContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -29,13 +29,18 @@ const Header = ({ docName, handleSave }) => {
   const navigate = useNavigate();
 
   const logout = () => {
-    signOut(auth);
-    setUser(null);
-    navigate("/login");
+    setUser(null); // Update user state to null
+    signOut(auth).then(() => {
+      navigate("/login"); // Navigate to the login page after logout
+    });
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value); // Update search input state
   };
   return (
     <>
-      <header className="sticky gap-2 top-0 z-50 bg-primary shadow-md w-100 flex items-center justify-between py-6 px-9">
+      <header className="sticky gap-2 top-0 z-40 bg-primary shadow-md w-100 flex items-center justify-between py-6 px-9">
         <div className="flex items-center justify-center">
           <Link to="/">
             <Description
@@ -53,14 +58,18 @@ const Header = ({ docName, handleSave }) => {
             </h1>
           ) : (
             <>
-              <h1 className="hidden md:inline-flex ml-2 text-primary text-2xl">
+              <h1 className="md:inline-flex ml-2 text-primary text-2xl">
                 {docName || null}
               </h1>
             </>
           )}
         </div>
-        {location.pathname === "/" ? <Search /> : ""}
-        <div className="flex items-center justify-around">
+        {location.pathname === "/" ? (
+          <Search handleSearchChange={handleSearchChange} />
+        ) : (
+          ""
+        )}
+        <div className="flex items-center gap-2">
           {location.pathname !== "/" ? (
             <SaveDocBtn handleSave={handleSave} />
           ) : (
@@ -70,7 +79,7 @@ const Header = ({ docName, handleSave }) => {
             src={user?.photoURL}
             alt={user?.displayName}
             title={user?.displayName}
-            className="cursor-pointer h-10 w-10 rounded-full"
+            className="cursor-pointer h-10 w-12 rounded-full"
             onClick={handleClick}
           />
         </div>
@@ -119,9 +128,9 @@ const Header = ({ docName, handleSave }) => {
           </p>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        {/* <MenuItem onClick={handleClose}>
           <ThemeToggle />
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={handleModalOpen}>Logout</MenuItem>
       </Menu>
       <Modal
@@ -137,7 +146,7 @@ const Header = ({ docName, handleSave }) => {
           <p className="font-light">Do you really want to exit?</p>
           <div className="flex items-center justify-between mt-5">
             <button
-              onClick={logout}
+              onClick={() => logout()}
               className="bg-red-500 text-white px-8 py-2 rounded-xl hover:shadow-2xl hover:bg-red-600"
             >
               Yes

@@ -6,7 +6,7 @@ import { firestore } from "../../firebase/firebase";
 
 import DocRow from "./DocRow";
 
-const DocsList = () => {
+const DocsList = ({ searchInput }) => {
   const { user } = useContext(AuthContext);
 
   const [userDoc, setUserDoc] = useState([]);
@@ -25,17 +25,27 @@ const DocsList = () => {
     );
     return () => unsub();
   }, [user?.uid]);
+
+  const filteredDocs = userDoc.filter((doc) =>
+    doc.name.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
   return (
-    <div className="flex flex-wrap gap-6 max-sm:justify-center sm:justify-center">
-      {userDoc?.length === 0 ? (
+    <div className="flex flex-wrap gap-6 sm:justify-normal justify-center">
+      {userDoc?.length === 0 && (
         <div className="w-full text-center py-5">
           No Documents. Create your first document by click on{" "}
           <span className="text-blue-500">Create New</span> button
         </div>
+      )}
+      {filteredDocs?.length === 0 && userDoc?.length > 0?  (
+        <div className="w-full text-center py-5">
+          No Documents found. Try another search
+        </div>
       ) : (
         ""
       )}
-      {userDoc?.map((doc) => (
+      {filteredDocs?.map((doc) => (
         <DocRow id={doc?.id} key={doc?.id} name={doc?.name} date={doc?.time} />
       ))}
     </div>
