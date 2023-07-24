@@ -128,9 +128,9 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
           </p>
         </MenuItem>
         <Divider />
-        {/* <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleClose}>
           <ThemeToggle />
-        </MenuItem> */}
+        </MenuItem>
         <MenuItem onClick={handleModalOpen}>Logout</MenuItem>
       </Menu>
       <Modal
