@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
@@ -13,7 +12,7 @@ const NotFound = () => {
             <span className="cursor-pointer transition hover:text-blue-600">4</span>
           </h2>
           <p className="text-2xl font-semibold md:text-3xl text-primary">
-            Sorry, we couldn't find this page.
+            Sorry, we couldn&apos;t find this page.
           </p>
         </div>
       </div>
