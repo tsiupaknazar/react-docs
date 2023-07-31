@@ -1,4 +1,5 @@
 import { SaveRounded } from "@mui/icons-material";
+import PropTypes from "prop-types";
 
 const SaveDocBtn = ({ handleSave }) => {
   return (
@@ -18,3 +19,7 @@ const SaveDocBtn = ({ handleSave }) => {
 };
 
 export default SaveDocBtn;
+
+SaveDocBtn.propTypes = {
+  handleSave: PropTypes.func.isRequired,
+}

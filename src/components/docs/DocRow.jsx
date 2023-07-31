@@ -1,11 +1,13 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
 import { Article, MoreVert } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import { Button, Modal, Box, Select, MenuItem, Menu } from "@mui/material";
+import { Modal, Box, MenuItem, Menu } from "@mui/material";
+
+import PropTypes from "prop-types";
 
 const DocRow = ({ id, name, date }) => {
   //Rename doc state
@@ -134,7 +136,10 @@ const DocRow = ({ id, name, date }) => {
               value={newName}
             />
             <div className="flex items-center justify-around mt-5">
-              <button onClick={() => updateName(id)} className="bg-blue-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-blue-600">
+              <button
+                onClick={() => updateName(id)}
+                className="bg-blue-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-blue-600"
+              >
                 Create
               </button>
               <button
@@ -152,3 +157,9 @@ const DocRow = ({ id, name, date }) => {
 };
 
 export default DocRow;
+
+DocRow.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  date: PropTypes.object,
+};

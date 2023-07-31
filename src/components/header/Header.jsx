@@ -5,6 +5,8 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { auth } from "../../firebase/firebase";
+import PropTypes from "prop-types";
+
 import ThemeToggle from "../common/ThemeToggle";
 
 import Search from "./Search";
@@ -165,3 +167,9 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
 };
 
 export default Header;
+
+Header.propTypes = {
+  docName: PropTypes.string,
+  handleSave: PropTypes.func,
+  setSearchInput: PropTypes.func,
+};

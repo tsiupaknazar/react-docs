@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 import { collection, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
+import PropTypes from "prop-types";
 
 import DocRow from "./DocRow";
 
@@ -53,3 +54,7 @@ const DocsList = ({ searchInput }) => {
 };
 
 export default DocsList;
+
+DocsList.propTypes = {
+  searchInput: PropTypes.string,
+}
