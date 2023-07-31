@@ -58,7 +58,7 @@ const DocItem = ({ id, name, date }) => {
       <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
         <div className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center">
           <Link to={`/doc/${id}`}>
-            <Description sx={{ fontSize: 100, color: "#1A73E8" }} />
+            <Description sx={{ fontSize: 150, color: "#1A73E8" }} />
           </Link>
         </div>
         <div className="p-4 border-t flex flex-col">

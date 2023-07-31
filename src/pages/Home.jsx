@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Modal } from "@mui/material";
 import { firestore } from "../firebase/firebase";
@@ -8,9 +8,11 @@ import { AuthContext } from "../context/AuthContext";
 
 import Header from "../components/header/Header";
 import DocsList from "../components/docs/DocsList";
+import Loader from "../components/loader/Loader";
 
 const Home = () => {
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
@@ -34,6 +36,25 @@ const Home = () => {
     );
     navigate(`/doc/${docRef?.id}`);
   };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (user === null) {
+    navigate("/login");
+    return null;
+  }
 
   return (
     <div>

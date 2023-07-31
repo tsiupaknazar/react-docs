@@ -42,7 +42,7 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
   };
   return (
     <>
-      <header className="sticky gap-2 top-0 z-40 bg-primary shadow-md w-100 flex items-center justify-between py-6 px-9">
+      <header className="sticky gap-2 top-0 z-40 bg-primary shadow-md w-100 flex items-center justify-between py-6 px-10">
         <div className="flex items-center justify-center">
           <Link to="/">
             <Description
@@ -75,13 +75,13 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
           {location.pathname !== "/" ? (
             <SaveDocBtn handleSave={handleSave} />
           ) : (
-            ""
+            <ThemeToggle />
           )}
           <img
             src={user?.photoURL}
             alt={user?.displayName}
             title={user?.displayName}
-            className="cursor-pointer h-10 w-12 rounded-full"
+            className="cursor-pointer h-10 w-10 rounded-full"
             onClick={handleClick}
           />
         </div>
@@ -130,9 +130,6 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
           </p>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
-          <ThemeToggle />
-        </MenuItem>
         <MenuItem onClick={handleModalOpen}>Logout</MenuItem>
       </Menu>
       <Modal
