@@ -5,7 +5,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import PropTypes from "prop-types";
 
-import DocRow from "./DocRow";
+import DocItem from "./DocItem";
 
 const DocsList = ({ searchInput }) => {
   const { user } = useContext(AuthContext);
@@ -47,7 +47,7 @@ const DocsList = ({ searchInput }) => {
         ""
       )}
       {filteredDocs?.map((doc) => (
-        <DocRow id={doc?.id} key={doc?.id} name={doc?.name} date={doc?.time} />
+        <DocItem id={doc?.id} key={doc?.id} name={doc?.name} date={doc?.time} />
       ))}
     </div>
   );

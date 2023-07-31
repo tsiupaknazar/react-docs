@@ -3,13 +3,13 @@ import { AuthContext } from "../../context/AuthContext";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
-import { Article, MoreVert } from "@mui/icons-material";
+import { Article, Description, MoreVert } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { Modal, Box, MenuItem, Menu } from "@mui/material";
 
 import PropTypes from "prop-types";
 
-const DocRow = ({ id, name, date }) => {
+const DocItem = ({ id, name, date }) => {
   //Rename doc state
   const [newName, setNewName] = useState("");
 
@@ -56,8 +56,10 @@ const DocRow = ({ id, name, date }) => {
   return (
     <>
       <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
-        <div className="relative h-[290px] w-[230px] cursor-pointer">
-          <Link to={`/doc/${id}`}></Link>
+        <div className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center">
+          <Link to={`/doc/${id}`}>
+            <Description sx={{ fontSize: 100, color: "#1A73E8" }} />
+          </Link>
         </div>
         <div className="p-4 border-t flex flex-col">
           <Link to={`/doc/${id}`} className="font-bold text-md text-primary">
@@ -156,9 +158,9 @@ const DocRow = ({ id, name, date }) => {
   );
 };
 
-export default DocRow;
+export default DocItem;
 
-DocRow.propTypes = {
+DocItem.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
   date: PropTypes.object,
