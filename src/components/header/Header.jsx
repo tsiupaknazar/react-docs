@@ -1,19 +1,17 @@
-import { Description } from "@mui/icons-material";
 import { MenuItem, Menu, Divider, Modal, Box } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { auth } from "../../firebase/firebase";
 import PropTypes from "prop-types";
 
+import HeaderContent from "./HeaderContent";
 import ThemeToggle from "../common/ThemeToggle";
-
-import Search from "./Search";
-import SaveDocBtn from "./SaveDocBtn";
 
 const Header = ({ docName, handleSave, setSearchInput }) => {
   const { user, setUser } = useContext(AuthContext);
+  const location = useLocation();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -43,40 +41,14 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
   return (
     <>
       <header className="sticky gap-2 top-0 z-40 bg-primary shadow-md w-100 flex items-center justify-between py-6 px-10">
-        <div className="flex items-center justify-center">
-          <Link to="/">
-            <Description
-              sx={{
-                color: "#4385F3",
-                width: "40px",
-                height: "40px",
-                cursor: "pointer",
-              }}
-            />
-          </Link>
-          {location.pathname === "/" ? (
-            <h1 className="hidden md:inline-flex ml-2 text-primary text-2xl">
-              Docs
-            </h1>
-          ) : (
-            <>
-              <h1 className="md:inline-flex ml-2 text-primary text-2xl">
-                {docName || null}
-              </h1>
-            </>
-          )}
-        </div>
-        {location.pathname === "/" ? (
-          <Search handleSearchChange={handleSearchChange} />
-        ) : (
-          ""
-        )}
-        <div className="flex items-center gap-2">
-          {location.pathname !== "/" ? (
-            <SaveDocBtn handleSave={handleSave} />
-          ) : (
-            <ThemeToggle />
-          )}
+        <HeaderContent
+          location={location}
+          docName={docName}
+          handleSearchChange={handleSearchChange}
+          handleSave={handleSave}
+        />
+        <div className="flex items-center justify-between">
+          <ThemeToggle />
           <img
             src={user?.photoURL}
             alt={user?.displayName}

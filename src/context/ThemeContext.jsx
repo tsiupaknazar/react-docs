@@ -1,10 +1,9 @@
 import { useState, useEffect, createContext } from "react";
-
 import PropTypes from "prop-types";
 
 const getInitialTheme = () => {
-  if (typeof window !== "undefined" && window.localStorage) {
-    const storedPrefs = window.localStorage.getItem("color-theme");
+  if (typeof localStorage !== "undefined") {
+    const storedPrefs = localStorage.getItem("color-theme");
     if (typeof storedPrefs === "string") {
       return storedPrefs;
     }
@@ -22,7 +21,7 @@ export const ThemeContext = createContext();
 export const ThemeProvider = ({ initialTheme, children }) => {
   const [theme, setTheme] = useState(getInitialTheme);
 
-  const rawSetTheme = (theme) => {
+  const setThemeLocally = (theme) => {
     const root = window.document.documentElement;
     const isDark = theme === "dark";
 
@@ -31,13 +30,16 @@ export const ThemeProvider = ({ initialTheme, children }) => {
 
     localStorage.setItem("color-theme", theme);
   };
-  if (initialTheme) {
-    rawSetTheme(initialTheme);
-  }
 
   useEffect(() => {
-    rawSetTheme(theme);
+    setThemeLocally(theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (initialTheme) {
+      setTheme(initialTheme);
+    }
+  }, [initialTheme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

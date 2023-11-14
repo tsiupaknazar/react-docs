@@ -16,12 +16,16 @@ const DocsList = ({ searchInput }) => {
     const unsub = onSnapshot(
       collection(firestore, "userDocs", `${user?.uid}`, "docs"),
       (snap) => {
-        setUserDoc(
-          snap.docs?.map((doc) => ({
-            id: doc?.id,
-            ...doc.data(),
-          }))
-        );
+        try {
+          setUserDoc(
+            snap.docs?.map((doc) => ({
+              id: doc?.id,
+              ...doc.data(),
+            }))
+          );
+        } catch (error) {
+          console.error("Error fetching documents:", error);
+        }
       }
     );
     return () => unsub();
@@ -39,15 +43,18 @@ const DocsList = ({ searchInput }) => {
           <span className="text-blue-500">Create New</span> button
         </div>
       )}
-      {filteredDocs?.length === 0 && userDoc?.length > 0?  (
+      {filteredDocs?.length === 0 && userDoc?.length > 0 && (
         <div className="w-full text-center py-5">
           No Documents found. Try another search
         </div>
-      ) : (
-        ""
       )}
       {filteredDocs?.map((doc) => (
-        <DocItem id={doc?.id} key={doc?.id} name={doc?.name} date={doc?.time} />
+        <DocItem
+          id={doc?.id || ""}
+          key={doc?.id || ""}
+          name={doc?.name || ""}
+          date={doc?.time || ""}
+        />
       ))}
     </div>
   );
@@ -57,4 +64,4 @@ export default DocsList;
 
 DocsList.propTypes = {
   searchInput: PropTypes.string,
-}
+};
