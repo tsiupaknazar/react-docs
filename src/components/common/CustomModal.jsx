@@ -10,7 +10,7 @@ const CustomModal = ({ isOpen, onClose, title, children }) => {
       aria-describedby="modal-modal-description"
     >
       <Box
-        className="absolute top-[50%] left-[50%] w-[auto] p-6 bg-primary shadow-lg rounded-xl"
+        className="absolute top-[50%] left-[50%] w-[400px] p-6 bg-primary shadow-lg rounded-xl"
         style={{ transform: "translate(-50%, -50%)" }}
       >
         <h2 id="modal-modal-title" className="text-xl font-bold mb-4">

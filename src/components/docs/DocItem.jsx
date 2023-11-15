@@ -1,21 +1,25 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
 import { Article, Description, MoreVert } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MenuItem, Menu } from "@mui/material";
 
 import PropTypes from "prop-types";
 
 import CustomModal from "../common/CustomModal";
+import DocPreview from "./DocPreview";
 
 const DocItem = ({ id, name, date }) => {
-  //Rename doc state
-  const [newName, setNewName] = useState("");
-
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+
+  const docRef = doc(firestore, "userDocs", `${user?.uid}`, "docs", id);
+
+  const [newName, setNewName] = useState("");
+  const [fileContent, setFileContent] = useState('');
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -36,7 +40,6 @@ const DocItem = ({ id, name, date }) => {
 
   const deleteDocument = async (id) => {
     try {
-      const docRef = doc(firestore, "userDocs", `${user?.uid}`, "docs", id);
       await deleteDoc(docRef);
     } catch (error) {
       console.error(error);
@@ -44,7 +47,6 @@ const DocItem = ({ id, name, date }) => {
   };
   const updateName = async (id) => {
     try {
-      const docRef = doc(firestore, "userDocs", `${user?.uid}`, "docs", id);
       await updateDoc(docRef, { name: newName });
       console.log("Document successfully updated!");
       handleRenameModalClose();
@@ -53,21 +55,48 @@ const DocItem = ({ id, name, date }) => {
     }
   };
 
+  useEffect(() => {
+    const getDocContent = async (id) => {
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const content = docSnap.data().content;
+          setFileContent(content);
+          console.log(docSnap.data().styles);
+        } else {
+          console.log("Document does not exist");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getDocContent();
+  }, [docRef])
+
   const handleNameChange = (e) => {
     setNewName(e.target.value);
+  };
+  const navigateToDoc = () => {
+    navigate(`/doc/${id}`);
   };
   return (
     <>
       <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
-        <div className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center">
-          <Link to={`/doc/${id}`}>
-            <Description sx={{ fontSize: 150, color: "#1A73E8" }} />
-          </Link>
+        <div
+          className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center"
+          onClick={navigateToDoc}
+        >
+          {/* <Description sx={{ fontSize: 150, color: "#1A73E8" }} /> */}
+          <DocPreview content={fileContent} />
         </div>
         <div className="p-4 border-t flex flex-col">
-          <Link to={`/doc/${id}`} className="font-bold text-md text-primary">
+          <p
+            className="font-bold text-md text-primary cursor-pointer"
+            onClick={navigateToDoc}
+          >
             {name || "Filename"}
-          </Link>
+          </p>
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Article style={{ color: "#1A73E8" }} />
@@ -89,6 +118,12 @@ const DocItem = ({ id, name, date }) => {
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        PaperProps={{
+          sx: {
+            bgcolor: "var(--color-bg-primary)",
+            color: "var(--color-text-primary)",
+          },
+        }}
       >
         <MenuItem onClick={handleRenameModalOpen}>Rename Document</MenuItem>
         <MenuItem onClick={handleDeleteModalOpen}>Delete Document</MenuItem>

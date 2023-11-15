@@ -11,7 +11,7 @@ const HeaderContent = ({
   handleSave,
 }) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between w-full">
       <div className="flex items-center justify-center">
         <Link to="/">
           <Description

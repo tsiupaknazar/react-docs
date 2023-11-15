@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { ThemeContext } from "../context/ThemeContext";
 
 import { firestore } from "../firebase/firebase";
 import { doc, getDoc, updateDoc } from "@firebase/firestore";
@@ -13,6 +14,7 @@ import Loader from "../components/loader/Loader";
 
 const EditorPage = () => {
   const { user } = useContext(AuthContext);
+  const { theme } = useContext(ThemeContext);
   const [userDoc, setUserDoc] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -71,15 +73,6 @@ const EditorPage = () => {
             apiKey={import.meta.env.VITE_TINYMCE_KEY}
             init={{
               branding: false,
-              /* theme 
-              skin: window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "oxide-dark"
-                : "oxide",
-              content_css: window.matchMedia("(prefers-color-scheme: dark)")
-                .matches
-                ? "dark"
-                : "default",
-              theme */
               width: "100%",
               resize: false,
               menubar: false,

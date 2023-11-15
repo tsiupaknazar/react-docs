@@ -40,7 +40,7 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
   };
   return (
     <>
-      <header className="sticky gap-2 top-0 z-40 bg-primary shadow-md w-100 flex items-center justify-between py-6 px-10">
+      <header className="sticky gap-2 top-0 z-40 bg-primary shadow-md w-100 flex items-center justify-between py-6 px-8">
         <HeaderContent
           location={location}
           docName={docName}
@@ -53,7 +53,7 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
             src={user?.photoURL}
             alt={user?.displayName}
             title={user?.displayName}
-            className="cursor-pointer h-10 w-10 rounded-full"
+            className="cursor-pointer h-10 w-10 rounded-full ml-2"
             onClick={handleClick}
           />
         </div>
