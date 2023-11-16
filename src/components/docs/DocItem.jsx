@@ -3,8 +3,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { doc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
-import { Article, Description, MoreVert } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { Article, MoreVert } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import { MenuItem, Menu } from "@mui/material";
 
 import PropTypes from "prop-types";

@@ -11,6 +11,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Editor } from "@tinymce/tinymce-react";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../components/loader/Loader";
+import QuillEditor from "../components/text-editor/quilleditor";
 
 const EditorPage = () => {
   const { user } = useContext(AuthContext);
@@ -67,7 +68,7 @@ const EditorPage = () => {
       <div>
         <Header docName={userDoc?.name} handleSave={handleSave} />
         <div className="flex items-center justify-center">
-          <Editor
+          {/* <Editor
             onInit={(evt, editor) => (editorRef.current = editor)}
             initialValue={userDoc?.content || "Initial text editor value"}
             apiKey={import.meta.env.VITE_TINYMCE_KEY}
@@ -113,7 +114,8 @@ const EditorPage = () => {
                 }
               `,
             }}
-          />
+          /> */}
+          <QuillEditor />
         </div>
         <ToastContainer hideProgressBar={true} autoClose={3000} />
       </div>
