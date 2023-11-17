@@ -8,14 +8,14 @@ import { doc, getDoc, updateDoc } from "@firebase/firestore";
 import Header from "../components/header/Header";
 import { AuthContext } from "../context/AuthContext";
 
-import { Editor } from "@tinymce/tinymce-react";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../components/loader/Loader";
 import QuillEditor from "../components/text-editor/quilleditor";
+import { convertToHTML } from "draft-convert";
 
 const EditorPage = () => {
   const { user } = useContext(AuthContext);
-  const { theme } = useContext(ThemeContext);
+  // const { theme } = useContext(ThemeContext);
   const [userDoc, setUserDoc] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +32,19 @@ const EditorPage = () => {
         "docs",
         `${id}`
       );
-      await updateDoc(docRef, { content: editorRef.current.getContent() });
+
+      // Get the plain content from the Delta object
+      const content = editorRef.current?.getEditor().getContents();
+
+      // Convert the Delta object to a plain JavaScript object
+      const contentObject = content ? content.ops : [];
+
+      // Convert the plain object to HTML
+      const htmlContent = convertToHTML({ content: contentObject });
+
+      // Update the document with the HTML content
+      await updateDoc(docRef, { content: htmlContent });
+
       toast.success("Document successfully saved!");
     } catch (error) {
       toast.error("Error saving document");
@@ -54,13 +66,13 @@ const EditorPage = () => {
         const data = docSnap.data();
         setUserDoc(data);
         if (data.content) {
-          editorRef.current.setContent(data?.content);
+          editorRef.current?.getEditor().setContents(data.content);
         }
       }
       setLoading(false);
     };
     getUserDoc();
-  }, [id, user?.uid]);
+  }, [id, user?.uid, editorRef]);
 
   return (
     <>
@@ -115,7 +127,10 @@ const EditorPage = () => {
               `,
             }}
           /> */}
-          <QuillEditor />
+          <QuillEditor
+            editorRef={(ref) => (editorRef.current = ref)}
+            initialValue={userDoc?.content || ""}
+          />
         </div>
         <ToastContainer hideProgressBar={true} autoClose={3000} />
       </div>
