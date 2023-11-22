@@ -17,6 +17,8 @@ const EditorPage = () => {
   const { theme } = useContext(ThemeContext);
   const [userDoc, setUserDoc] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+  const [editorKey, setEditorKey] = useState(0);
 
   const { id } = useParams();
 
@@ -61,6 +63,11 @@ const EditorPage = () => {
     getUserDoc();
   }, [id, user?.uid]);
 
+  useEffect(() => {
+    setCurrentTheme(theme);
+    setEditorKey((prevKey) => prevKey + 1);
+  }, [theme]);
+
   return (
     <>
       {loading && <Loader />}
@@ -71,7 +78,15 @@ const EditorPage = () => {
             onInit={(evt, editor) => (editorRef.current = editor)}
             initialValue={userDoc?.content || "Initial text editor value"}
             apiKey={import.meta.env.VITE_TINYMCE_KEY}
+            key={editorKey}
             init={{
+              skin: window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "oxide-dark"
+                : "oxide",
+              content_css: window.matchMedia("(prefers-color-scheme: dark)")
+                .matches
+                ? "dark"
+                : "default",
               branding: false,
               width: "100%",
               resize: false,
@@ -90,20 +105,26 @@ const EditorPage = () => {
               image_advtab: true,
               importcss_append: true,
               height: 900,
+
               content_style: `
                 body {
-                  background: #fff;
+                  background: ${currentTheme === "dark" ? "#1e1e1e" : "#fff"};
+                  color: ${currentTheme === "dark" ? "#fff" : "#000"};
                 }
 
                 @media (min-width: 840px) {
                   html {
-                    background: #eceef4;
+                    background: ${
+                      currentTheme === "dark" ? "#1e1e1e" : "#eceef4"
+                    };
                     min-height: 100%;
                     padding: 0 .5rem;
                   }
 
                   body {
-                    background-color: #fff;
+                    background-color: ${
+                      currentTheme === "dark" ? "#1e1e1e" : "#fff"
+                    };
                     box-sizing: border-box;
                     margin: 1rem auto 0;
                     max-width: 820px;

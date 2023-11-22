@@ -11,6 +11,14 @@ const TextEditor = () => {
           initialValue={userDoc?.content || "Initial text editor value"}
           apiKey={import.meta.env.VITE_TINYMCE_KEY}
           init={{
+            // selector: "textarea",
+            skin: window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "oxide-dark"
+              : "oxide",
+            content_css: window.matchMedia("(prefers-color-scheme: dark)")
+              .matches
+              ? "dark"
+              : "default",
             branding: false,
             width: "100%",
             resize: false,
