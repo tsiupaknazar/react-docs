@@ -28,3 +28,11 @@
   --color-doc: #e4e7eb;
   --color-doc-hover: #2363EB;
 }
+
+.ql-toolbar {
+  @apply w-full;
+}
+
+.ql-toolbar .ql-icon {
+  @apply text-red-700;
+}
