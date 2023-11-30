@@ -19,7 +19,7 @@ const DocItem = ({ id, name, date }) => {
   const docRef = doc(firestore, "userDocs", `${user?.uid}`, "docs", id);
 
   const [newName, setNewName] = useState("");
-  const [fileContent, setFileContent] = useState('');
+  const [fileContent, setFileContent] = useState("");
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -72,7 +72,7 @@ const DocItem = ({ id, name, date }) => {
     };
 
     getDocContent();
-  }, [docRef])
+  }, [docRef]);
 
   const handleNameChange = (e) => {
     setNewName(e.target.value);
@@ -83,11 +83,7 @@ const DocItem = ({ id, name, date }) => {
   return (
     <>
       <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
-        <div
-          className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center"
-          onClick={navigateToDoc}
-        >
-          {/* <Description sx={{ fontSize: 150, color: "#1A73E8" }} /> */}
+        <div className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center">
           <DocPreview content={fileContent} />
         </div>
         <div className="p-4 border-t flex flex-col">

@@ -6,7 +6,7 @@
   @apply bg-primary text-primary;
 }
 .dark {
-  --color-bg-primary: #242424;
+  --color-bg-primary: #212F3E;
   --color-bg-secondary: #283141;
   --color-text-primary: #dbdbdb;
   --color-text-secondary: #e2e8f0;
@@ -20,8 +20,8 @@
 .light {
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #edf2f7;
-  --color-text-primary: #242424;
-  --color-text-secondary: #242424;
+  --color-text-primary: #212F3E;
+  --color-text-secondary: #212F3E;
   --color-text-accent: #2363EB;
   --color-bg-input: #edf2f7;
   --color-bg-button: #2363EB;
@@ -29,10 +29,10 @@
   --color-doc-hover: #2363EB;
 }
 
-.ql-toolbar {
-  @apply w-full;
+.dark-theme {
+  @apply dark;
 }
 
-.ql-toolbar .ql-icon {
-  @apply text-red-700;
+.light-theme {
+  @apply light;
 }
