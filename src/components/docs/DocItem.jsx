@@ -83,13 +83,16 @@ const DocItem = ({ id, name, date }) => {
   return (
     <>
       <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
-        <div className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center">
+        <div
+          onClick={navigateToDoc}
+          className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center"
+        >
           <DocPreview content={fileContent} />
         </div>
         <div className="p-4 border-t flex flex-col">
           <p
-            className="font-bold text-md text-primary cursor-pointer"
             onClick={navigateToDoc}
+            className="font-bold text-md text-primary cursor-pointer"
           >
             {name || "Filename"}
           </p>
@@ -124,7 +127,6 @@ const DocItem = ({ id, name, date }) => {
         <MenuItem onClick={handleRenameModalOpen}>Rename Document</MenuItem>
         <MenuItem onClick={handleDeleteModalOpen}>Delete Document</MenuItem>
       </Menu>
-      {/* Delete Document Modal */}
       <CustomModal
         isOpen={deleteModalOpen}
         onClose={handleDeleteModalClose}

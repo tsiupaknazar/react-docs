@@ -11,6 +11,8 @@ import { ToastContainer, toast } from "react-toastify";
 import Loader from "../components/loader/Loader";
 import { EditorContent } from "../components/text-editor";
 
+import mammoth from "mammoth";
+
 const EditorPage = () => {
   const { user } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
@@ -67,6 +69,30 @@ const EditorPage = () => {
     setEditorKey((prevKey) => prevKey + 1);
   }, [theme]);
 
+  const handleDownload = async () => {
+    const content = editorRef.current.getContent();
+    const fileName = `${userDoc?.name || "document"}.docx`;
+
+    // Use mammoth to convert HTML to .docx
+    const result = await mammoth.convertToBuffer(
+      { value: content },
+      { format: "docx" }
+    );
+
+    // Create a Blob from the buffer
+    const blob = new Blob([result.arrayBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+
+    // Trigger a download using an anchor tag
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       {loading && <Loader />}
@@ -78,6 +104,7 @@ const EditorPage = () => {
           currentTheme={currentTheme}
           editorKey={editorKey}
         />
+        <button onClick={handleDownload}>Download as .docx</button>
         <ToastContainer hideProgressBar={true} autoClose={3000} theme={theme} />
       </div>
     </>

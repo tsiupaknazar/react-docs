@@ -1,6 +1,5 @@
 import { Editor } from "@tinymce/tinymce-react";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
 
 export const EditorContent = ({
   userDoc,
