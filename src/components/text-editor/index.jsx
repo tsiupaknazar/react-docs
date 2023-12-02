@@ -7,13 +7,6 @@ export const EditorContent = ({
   currentTheme,
   editorKey,
 }) => {
-  // const [editorLoaded, setEditorLoaded] = useState(false);
-
-  // useEffect(() => {
-  //   if (editorRef.current) {
-  //     setEditorLoaded(true);
-  //   }
-  // }, [editorRef]);
   return (
     <div className="flex items-center justify-center">
         <Editor
