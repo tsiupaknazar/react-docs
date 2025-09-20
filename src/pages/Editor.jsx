@@ -1,124 +1,106 @@
-import { useContext, useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { ThemeContext } from "../context/ThemeContext";
-import { AuthContext } from "../context/AuthContext";
+import { useContext, useEffect, useRef, useState } from 'react';
+import RichTextEditor from 'reactjs-tiptap-editor';
 
-import { firestore } from "../firebase/firebase";
-import { doc, getDoc, updateDoc } from "@firebase/firestore";
+import { extensions } from '../components/text-editor/Extensions';
 
-import { ToastContainer, toast } from "react-toastify";
-import Loader from "../components/loader/Loader";
-import Header from "../components/header/Header";
+import { ThemeContext } from '../context/ThemeContext';
+import { AuthContext } from '../context/AuthContext';
+import { useParams } from 'react-router-dom';
 
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Strike from "@tiptap/extension-strike";
-import Heading from "@tiptap/extension-heading";
-import Blockquote from "@tiptap/extension-blockquote";
-import CodeBlock from "@tiptap/extension-code-block";
-import Code from "@tiptap/extension-code";
-import Highlight from "@tiptap/extension-highlight";
-// import TextStyle from "@tiptap/extension-text-style";
-import Color from "@tiptap/extension-color";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
-// import Table from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableCell from "@tiptap/extension-table-cell";
-import TableHeader from "@tiptap/extension-table-header";
+import { firestore } from '../firebase/firebase'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
 
-import MenuBar from "../components/text-editor/MenuBar";
-import EditorContentWrapper from "../components/text-editor/EditorContentWrapper";
-import SaveLoadControls from "../components/text-editor/SaveLoadControls";
+import { ToastContainer, toast } from 'react-toastify'
+import Loader from '../components/loader/Loader'
+import Header from '../components/header/Header'
 
-const TiptapEditorPage = () => {
-  const { user } = useContext(AuthContext);
-  const { theme } = useContext(ThemeContext);
-  const [userDoc, setUserDoc] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [currentTheme, setCurrentTheme] = useState(theme);
-  const [editorKey, setEditorKey] = useState(0);
 
-  const { id } = useParams();
-  const editorRef = useRef(null);
+const Editor = () => {
+    const { user } = useContext(AuthContext);
+    const { theme } = useContext(ThemeContext)
 
-  const editor = useEditor({
-    key: editorKey,
-    extensions: [
-      StarterKit.configure({ history: true }),
-      Underline,
-      Strike,
-      Heading.configure({ levels: [1, 2, 3] }),
-      Blockquote,
-      CodeBlock,
-      Code,
-      Highlight,
-      // TextStyle,
-      Color,
-      Link.configure({ openOnClick: false }),
-      Image,
-      // Table.configure({ resizable: true }),
-      TableRow,
-      TableHeader,
-      TableCell,
-    ],
-    content: "",
-    onUpdate: ({ editor }) => {
-      editorRef.current = editor;
-    },
-  });
+    const { id } = useParams()
+    const [userDoc, setUserDoc] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [initialContent, setInitialContent] = useState(null);
+    const [content, setContent] = useState('');
+    const editorRef = useRef(null);
 
-  // Load Firestore document
-  useEffect(() => {
-    const getUserDoc = async () => {
-      const docRef = doc(firestore, "userDocs", `${user?.uid}`, "docs", `${id}`);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setUserDoc(data);
-        if (data.content && editor) {
-          editor.commands.setContent(data.content);
+    // Load content from Firestore
+    useEffect(() => {
+        if (!user?.uid) {
+            setLoading(false);
+            return;
         }
-      }
-      setLoading(false);
+        const load = async () => {
+            try {
+                const docRef = doc(firestore, 'userDocs', user.uid, 'docs', id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    setUserDoc(data);
+                    if (data.content) {
+                        setInitialContent(data.content);
+                        setContent(data.content);
+                    } else {
+                        setInitialContent('<p></p>');
+                        setContent('<p></p>');
+                    }
+                } else {
+                    setInitialContent('<p></p>');
+                    setContent('<p></p>');
+                }
+            } catch (error) {
+                console.error('Error loading document:', error);
+                toast.error('Error loading document');
+            } finally {
+                setLoading(false);
+            }
+        };
+        load();
+    }, [user?.uid, id]);
+
+    // Save content to Firestore
+    const handleSave = async () => {
+        if (!editorRef.current) return;
+        try {
+            const html = editorRef.current.getHTML();
+            const docRef = doc(firestore, 'userDocs', user.uid, 'docs', id);
+            await updateDoc(docRef, { content: html });
+            toast.success('Document successfully saved!');
+        } catch (error) {
+            console.error('Error saving document:', error);
+            toast.error('Error saving document');
+        }
     };
-    getUserDoc();
-  }, [id, user?.uid, editor]);
 
-  // Handle theme changes
-  useEffect(() => {
-    setCurrentTheme(theme);
-    setEditorKey((prev) => prev + 1);
-  }, [theme]);
+    // Editor instance callback
+    const onEditorReady = (editor) => {
+        editorRef.current = editor;
+    };
 
-  const handleSave = async () => {
-    if (!editorRef.current) return;
-    try {
-      const docRef = doc(firestore, "userDocs", `${user?.uid}`, "docs", `${id}`);
-      await updateDoc(docRef, { content: editorRef.current.getHTML() });
-      toast.success("Document successfully saved!");
-    } catch (error) {
-      toast.error("Error saving document");
-      console.log(error);
+    const onChangeContent = (value, editor) => {
+        setContent(value);
+        editorRef.current = editor;
+    };
+
+    if (loading || initialContent === null) {
+        return <Loader />;
     }
-  };
 
-  if (loading) return <Loader />;
-
-  return (
-    <div className={`min-h-screen p-4 bg-${currentTheme}-100`}>
-      <Header docName={userDoc?.name} handleSave={handleSave} />
-      {editor && (
-        <>
-          <MenuBar editor={editor} />
-          <EditorContentWrapper editor={editor} />
-          <SaveLoadControls editor={editor} />
-        </>
-      )}
-      <ToastContainer hideProgressBar={true} autoClose={3000} theme={theme} />
-    </div>
-  );
+    return (
+        <div className={`min-h-screen p-4 bg-${theme}-100 text-black`}>
+            <Header docName={userDoc?.name} handleSave={handleSave} />
+            <RichTextEditor
+                output='html'
+                content={content}
+                onChangeContent={onChangeContent}
+                extensions={extensions}
+                onReady={onEditorReady}
+            />
+            <ToastContainer />
+        </div>
+    );
 };
 
-export default TiptapEditorPage;
+export default Editor;
