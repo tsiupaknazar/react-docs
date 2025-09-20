@@ -8,7 +8,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useParams } from 'react-router-dom';
 
 import { firestore } from '../firebase/firebase'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc, onSnapshot } from 'firebase/firestore'
 
 import { ToastContainer, toast } from 'react-toastify'
 import Loader from '../components/loader/Loader'
@@ -26,41 +26,37 @@ const Editor = () => {
     const [content, setContent] = useState('');
     const editorRef = useRef(null);
 
-    // Load content from Firestore
-    useEffect(() => {
-        if (!user?.uid) {
-            setLoading(false);
-            return;
-        }
-        const load = async () => {
-            try {
-                const docRef = doc(firestore, 'userDocs', user.uid, 'docs', id);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    setUserDoc(data);
-                    if (data.content) {
-                        setInitialContent(data.content);
-                        setContent(data.content);
-                    } else {
-                        setInitialContent('<p></p>');
-                        setContent('<p></p>');
-                    }
-                } else {
-                    setInitialContent('<p></p>');
-                    setContent('<p></p>');
-                }
-            } catch (error) {
-                console.error('Error loading document:', error);
-                toast.error('Error loading document');
-            } finally {
-                setLoading(false);
-            }
-        };
-        load();
-    }, [user?.uid, id]);
+   useEffect(() => {
+  if (!user?.uid) {
+    setLoading(false);
+    return;
+  }
+  const docRef = doc(firestore, "userDocs", user.uid, "docs", id);
+  const unsubscribe = onSnapshot(docRef, (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      setUserDoc(data);
+      if (data.content) {
+        setInitialContent(data.content);
+        setContent(data.content);
+      } else {
+        setInitialContent("<p></p>");
+        setContent("<p></p>");
+      }
+    } else {
+      setInitialContent("<p></p>");
+      setContent("<p></p>");
+    }
+    setLoading(false);
+  }, (error) => {
+    console.error("Error loading document:", error);
+    toast.error("Error loading document");
+    setLoading(false);
+  });
 
-    // Save content to Firestore
+  return () => unsubscribe();
+}, [user?.uid, id]);
+
     const handleSave = async () => {
         if (!editorRef.current) return;
         try {
@@ -88,14 +84,15 @@ const Editor = () => {
     }
 
     return (
-        <div className={`min-h-screen p-4 bg-${theme}-100 text-black`}>
-            <Header docName={userDoc?.name} handleSave={handleSave} />
+        <div className={`min-h-screen bg-${theme}-100 text-black`}>
+            <Header docName={userDoc?.name} handleSave={handleSave} docId={id}/>
             <RichTextEditor
                 output='html'
                 content={content}
                 onChangeContent={onChangeContent}
                 extensions={extensions}
                 onReady={onEditorReady}
+                className="rounded-none"
             />
             <ToastContainer />
         </div>

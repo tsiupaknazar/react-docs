@@ -5,29 +5,31 @@
 :root {
   @apply bg-primary text-primary;
 }
+
 .dark {
-  --color-bg-primary: #212F3E;
-  --color-bg-secondary: #283141;
-  --color-text-primary: #dbdbdb;
-  --color-text-secondary: #e2e8f0;
-  --color-text-accent: #81e6d9;
-  --color-bg-input: #4a5361;
-  --color-bg-button: #81e6d9;
-  --color-doc: #4b5563;
-  --color-doc-hover: #E4E7EB;
+  --color-bg-primary: #0D0D0D;       /* main background */
+  --color-bg-secondary: #1A1A1A;     /* secondary background */
+  --color-text-primary: #F5F5F5;     /* main text */
+  --color-text-secondary: #A3A3A3;   /* muted text */
+  --color-text-accent: #3B82F6;      /* accent (blue-500) */
+  --color-bg-input: #262626;         /* input fields */
+  --color-bg-button: #3B82F6;        /* primary button */
+  --color-doc: #404040;              /* neutral docs bg */
+  --color-doc-hover: #525252;        /* hover state */
 }
 
 .light {
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #edf2f7;
-  --color-text-primary: #212F3E;
-  --color-text-secondary: #212F3E;
-  --color-text-accent: #2363EB;
-  --color-bg-input: #edf2f7;
-  --color-bg-button: #2363EB;
-  --color-doc: #e4e7eb;
-  --color-doc-hover: #2363EB;
+  --color-bg-primary: #FFFFFF;       /* main background */
+  --color-bg-secondary: #F9FAFB;     /* secondary background */
+  --color-text-primary: #111827;     /* main text */
+  --color-text-secondary: #4B5563;   /* muted text */
+  --color-text-accent: #2563EB;      /* accent (blue-600) */
+  --color-bg-input: #F3F4F6;         /* input fields */
+  --color-bg-button: #2563EB;        /* primary button */
+  --color-doc: #E5E7EB;              /* neutral docs bg */
+  --color-doc-hover: #2563EB;        /* hover state */
 }
+
 
 .dark-theme {
   @apply dark;
@@ -35,4 +37,8 @@
 
 .light-theme {
   @apply light;
+}
+
+.reactjs-tiptap-editor {
+  border-radius: 0 !important;
 }

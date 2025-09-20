@@ -8,8 +8,9 @@ import PropTypes from "prop-types";
 
 import HeaderContent from "./HeaderContent";
 import ThemeToggle from "../common/ThemeToggle";
+import SaveDocBtn from "./SaveDocBtn";
 
-const Header = ({ docName, handleSave, setSearchInput }) => {
+const Header = ({ docName, handleSave, setSearchInput, docId }) => {
   const { user, setUser } = useContext(AuthContext);
   const location = useLocation();
 
@@ -29,31 +30,33 @@ const Header = ({ docName, handleSave, setSearchInput }) => {
   const navigate = useNavigate();
 
   const logout = () => {
-    setUser(null); // Update user state to null
+    setUser(null);
     signOut(auth).then(() => {
-      navigate("/login"); // Navigate to the login page after logout
+      navigate("/login");
     });
   };
 
   const handleSearchChange = (event) => {
-    setSearchInput(event.target.value); // Update search input state
+    setSearchInput(event.target.value);
   };
   return (
     <>
-      <header className="sticky gap-2 top-0 z-40 bg-primary shadow-md w-100 flex items-center justify-between py-6 px-8">
+      <header className="sticky top-0 z-40 bg-primary shadow-md min-w-full flex items-center justify-between py-4 px-8 dark:border-b-2">
         <HeaderContent
           location={location}
           docName={docName}
           handleSearchChange={handleSearchChange}
           handleSave={handleSave}
+          docId={docId}
         />
         <div className="flex items-center justify-between">
+          {location.pathname !== "/" && <SaveDocBtn handleSave={handleSave} />}
           <ThemeToggle />
           <img
             src={user?.photoURL}
             alt={user?.displayName}
             title={user?.displayName}
-            className="cursor-pointer h-10 w-10 rounded-full ml-2"
+            className="cursor-pointer h-8 w-8 rounded-full ml-2"
             onClick={handleClick}
           />
         </div>
@@ -141,4 +144,5 @@ Header.propTypes = {
   docName: PropTypes.string,
   handleSave: PropTypes.func,
   setSearchInput: PropTypes.func,
+  docId: PropTypes.string,
 };

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { BsMoonFill, BsSunFill } from "react-icons/bs";
+import { Sun, Moon } from 'lucide-react';
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -12,15 +12,12 @@ const ThemeToggle = () => {
   return (
     <div className="p-3">
       <div
-        className={`flex items-center cursor-pointer ${
-          theme === "dark" ? "" : "text-[#242424]"
-        }`}
         onClick={toggleTheme}
       >
         {theme === "dark" ? (
-          <BsSunFill className="text-3xl" />
+          <Sun className="text-3xl text-primary" />
         ) : (
-          <BsMoonFill className="text-3xl text-[#242424]" />
+          <Moon className="text-3xl text-primary" />
         )}
       </div>
     </div>
