@@ -74,7 +74,6 @@ const Editor = () => {
         }
     };
 
-    // Editor instance callback
     const onEditorReady = (editor) => {
         editorRef.current = editor;
     };
