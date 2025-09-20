@@ -4,7 +4,6 @@ import { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { auth } from "../../firebase/firebase";
-import PropTypes from "prop-types";
 
 import HeaderContent from "./HeaderContent";
 import ThemeToggle from "../common/ThemeToggle";
@@ -46,7 +45,6 @@ const Header = ({ docName, handleSave, setSearchInput, docId }) => {
           location={location}
           docName={docName}
           handleSearchChange={handleSearchChange}
-          handleSave={handleSave}
           docId={docId}
         />
         <div className="flex items-center justify-between">
@@ -139,10 +137,3 @@ const Header = ({ docName, handleSave, setSearchInput, docId }) => {
 };
 
 export default Header;
-
-Header.propTypes = {
-  docName: PropTypes.string,
-  handleSave: PropTypes.func,
-  setSearchInput: PropTypes.func,
-  docId: PropTypes.string,
-};

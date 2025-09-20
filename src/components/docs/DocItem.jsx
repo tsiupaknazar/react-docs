@@ -7,8 +7,6 @@ import { Article, MoreVert } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { MenuItem, Menu } from "@mui/material";
 
-import PropTypes from "prop-types";
-
 import CustomModal from "../common/CustomModal";
 import DocPreview from "./DocPreview";
 
@@ -62,7 +60,7 @@ const DocItem = ({ id, name, date }) => {
         if (docSnap.exists()) {
           const content = docSnap.data().content;
           setFileContent(content);
-          console.log(docSnap.data().styles);
+          // console.log(docSnap.data().styles);
         } else {
           console.log("Document does not exist");
         }
@@ -167,9 +165,8 @@ const DocItem = ({ id, name, date }) => {
           <div className="flex items-center justify-around mt-5">
             <button
               onClick={() => updateName(id)}
-              className={`bg-blue-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-blue-600 ${
-                !newName && "opacity-50 cursor-not-allowed"
-              }`}
+              className={`bg-blue-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-blue-600 ${!newName && "opacity-50 cursor-not-allowed"
+                }`}
               disabled={!newName}
             >
               Update
@@ -188,11 +185,3 @@ const DocItem = ({ id, name, date }) => {
 };
 
 export default DocItem;
-
-DocItem.propTypes = {
-  id: PropTypes.string,
-  name: PropTypes.string,
-  date: PropTypes.shape({
-    toDate: PropTypes.func.isRequired,
-  }),
-};

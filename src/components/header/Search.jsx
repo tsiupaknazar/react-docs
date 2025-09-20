@@ -1,5 +1,4 @@
 import { Search as SearchIcon } from "@mui/icons-material";
-import PropTypes from "prop-types";
 
 const Search = ({ handleSearchChange }) => {
   return (
@@ -16,7 +15,3 @@ const Search = ({ handleSearchChange }) => {
 };
 
 export default Search;
-
-Search.propTypes = {
-  handleSearchChange: PropTypes.func.isRequired,
-}

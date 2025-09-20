@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 const SaveLoadControls = ({ editor }) => {
     if (!editor) return null;
 

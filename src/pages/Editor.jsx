@@ -16,87 +16,91 @@ import Header from '../components/header/Header'
 
 
 const Editor = () => {
-    const { user } = useContext(AuthContext);
-    const { theme } = useContext(ThemeContext)
+  const { user } = useContext(AuthContext);
+  const { theme } = useContext(ThemeContext)
 
-    const { id } = useParams()
-    const [userDoc, setUserDoc] = useState(null)
-    const [loading, setLoading] = useState(true)
-    const [initialContent, setInitialContent] = useState(null);
-    const [content, setContent] = useState('');
-    const editorRef = useRef(null);
+  const isInitialLoad = useRef(true);
 
-   useEffect(() => {
-  if (!user?.uid) {
-    setLoading(false);
-    return;
-  }
-  const docRef = doc(firestore, "userDocs", user.uid, "docs", id);
-  const unsubscribe = onSnapshot(docRef, (docSnap) => {
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setUserDoc(data);
-      if (data.content) {
-        setInitialContent(data.content);
-        setContent(data.content);
-      } else {
-        setInitialContent("<p></p>");
-        setContent("<p></p>");
-      }
-    } else {
-      setInitialContent("<p></p>");
-      setContent("<p></p>");
+  const { id } = useParams()
+  const [userDoc, setUserDoc] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [initialContent, setInitialContent] = useState(null);
+  const [content, setContent] = useState('');
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (!user?.uid) {
+      setLoading(false);
+      return;
     }
-    setLoading(false);
-  }, (error) => {
-    console.error("Error loading document:", error);
-    toast.error("Error loading document");
-    setLoading(false);
-  });
-
-  return () => unsubscribe();
-}, [user?.uid, id]);
-
-    const handleSave = async () => {
-        if (!editorRef.current) return;
-        try {
-            const html = editorRef.current.getHTML();
-            const docRef = doc(firestore, 'userDocs', user.uid, 'docs', id);
-            await updateDoc(docRef, { content: html });
-            toast.success('Document successfully saved!');
-        } catch (error) {
-            console.error('Error saving document:', error);
-            toast.error('Error saving document');
+    const docRef = doc(firestore, "userDocs", user.uid, "docs", id);
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setUserDoc(data);
+        if (isInitialLoad.current) {
+          setInitialContent(data.content || "<p></p>");
+          setContent(data.content || "<p></p>");
+          isInitialLoad.current = false;
         }
-    };
+      } else {
+        if (isInitialLoad.current) {
+          setInitialContent("<p></p>");
+          setContent("<p></p>");
+          isInitialLoad.current = false;
+        }
+      }
+      setLoading(false);
+    }, (error) => {
+      console.error("Error loading document:", error);
+      toast.error("Error loading document");
+      setLoading(false);
+    });
 
-    const onEditorReady = (editor) => {
-        editorRef.current = editor;
-    };
+    return () => unsubscribe();
+  }, [user?.uid, id]);
 
-    const onChangeContent = (value, editor) => {
-        setContent(value);
-        editorRef.current = editor;
-    };
-
-    if (loading || initialContent === null) {
-        return <Loader />;
+  useEffect(() => {
+    if (initialContent !== null && editorRef.current === null) {
+      setContent(initialContent + " ");
+      setTimeout(() => setContent(initialContent), 0);
     }
+  }, [initialContent]);
 
-    return (
-        <div className={`min-h-screen bg-${theme}-100 text-black`}>
-            <Header docName={userDoc?.name} handleSave={handleSave} docId={id}/>
-            <RichTextEditor
-                output='html'
-                content={content}
-                onChangeContent={onChangeContent}
-                extensions={extensions}
-                onReady={onEditorReady}
-                className="rounded-none"
-            />
-            <ToastContainer />
-        </div>
-    );
+  const handleSave = async () => {
+    if (!user?.uid || !id) return;
+    try {
+      const docRef = doc(firestore, 'userDocs', user.uid, 'docs', id);
+      await updateDoc(docRef, { content });
+      toast.success('Document successfully saved!');
+    } catch (error) {
+      console.error('Error saving document:', error);
+      toast.error('Error saving document');
+    }
+  };
+
+  const onChangeContent = (value) => {
+    setContent(value);
+  };
+
+  if (loading || initialContent === null) {
+    return <Loader />;
+  }
+
+  return (
+    <div className={`min-h-screen bg-${theme}-100 text-black`}>
+      <Header docName={userDoc?.name} handleSave={handleSave} docId={id} />
+      <RichTextEditor
+        output='html'
+        content={content}
+        onChangeContent={onChangeContent}
+        extensions={extensions}
+        className="rounded-none"
+
+      />
+      <ToastContainer />
+    </div>
+  );
 };
 
 export default Editor;

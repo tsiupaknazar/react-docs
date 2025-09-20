@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Description } from "@mui/icons-material";
 import Search from "./Search";
-import PropTypes from "prop-types";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import { useContext, useState } from "react";
@@ -95,16 +94,6 @@ const HeaderContent = ({
       <ToastContainer />
     </div>
   );
-};
-
-HeaderContent.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
-  docName: PropTypes.string,
-  handleSearchChange: PropTypes.func,
-  handleSave: PropTypes.func,
-  docId: PropTypes.string,
 };
 
 export default HeaderContent;

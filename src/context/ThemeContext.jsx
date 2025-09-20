@@ -1,5 +1,4 @@
 import { useState, useEffect, createContext } from "react";
-import PropTypes from "prop-types";
 
 const getInitialTheme = () => {
   if (typeof localStorage !== "undefined") {
@@ -46,9 +45,4 @@ export const ThemeProvider = ({ initialTheme, children }) => {
       {children}
     </ThemeContext.Provider>
   );
-};
-
-ThemeProvider.propTypes = {
-  initialTheme: PropTypes.string,
-  children: PropTypes.node,
 };

@@ -1,5 +1,4 @@
 import { Box, Modal } from "@mui/material";
-import PropTypes from "prop-types";
 
 const CustomModal = ({ isOpen, onClose, title, children }) => {
   return (
@@ -21,12 +20,3 @@ const CustomModal = ({ isOpen, onClose, title, children }) => {
     </Modal>
   );
 };
-
-CustomModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
-
-export default CustomModal;

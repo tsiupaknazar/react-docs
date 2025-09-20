@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 const DocPreview = ({ content }) => {
   return (
     <div
@@ -10,7 +8,3 @@ const DocPreview = ({ content }) => {
 };
 
 export default DocPreview;
-
-DocPreview.propTypes = {
-  content: PropTypes.string.isRequired,
-};
