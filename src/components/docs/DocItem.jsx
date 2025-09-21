@@ -3,10 +3,10 @@ import { AuthContext } from "../../context/AuthContext";
 import { doc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
-import { Article, MoreVert } from "@mui/icons-material";
+import { FileText, EllipsisVertical } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
-import { MenuItem, Menu } from "@mui/material";
 
+import Menu from "../common/Menu";
 import CustomModal from "../common/CustomModal";
 import DocPreview from "./DocPreview";
 
@@ -14,36 +14,37 @@ const DocItem = ({ id, name, date }) => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
-  const docRef = doc(firestore, "userDocs", `${user?.uid}`, "docs", id);
-
   const [newName, setNewName] = useState("");
   const [fileContent, setFileContent] = useState("");
-
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [renameModalOpen, setRenameModalOpen] = useState(false);
+
+  const docRef = doc(firestore, "userDocs", `${user?.uid}`, "docs", id);
+
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleDeleteModalOpen = () => setDeleteModalOpen(true);
   const handleDeleteModalClose = () => setDeleteModalOpen(false);
 
-  const [renameModalOpen, setRenameModalOpen] = useState(false);
-  const handleRenameModalOpen = () => setRenameModalOpen(true);
+  const handleRenameModalOpen = () => {
+    setNewName(name);
+    setRenameModalOpen(true);
+  };
   const handleRenameModalClose = () => setRenameModalOpen(false);
 
-  const deleteDocument = async (id) => {
+  const handleNameChange = (e) => {
+    setNewName(e.target.value);
+  };
+
+  const deleteDocument = async () => {
     try {
       await deleteDoc(docRef);
     } catch (error) {
       console.error(error);
     }
   };
-  const updateName = async (id) => {
+
+  const updateName = async () => {
     try {
       await updateDoc(docRef, { name: newName });
       console.log("Document successfully updated!");
@@ -54,13 +55,12 @@ const DocItem = ({ id, name, date }) => {
   };
 
   useEffect(() => {
-    const getDocContent = async (id) => {
+    const getDocContent = async () => {
       try {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const content = docSnap.data().content;
           setFileContent(content);
-          // console.log(docSnap.data().styles);
         } else {
           console.log("Document does not exist");
         }
@@ -70,14 +70,12 @@ const DocItem = ({ id, name, date }) => {
     };
 
     getDocContent();
-  }, [docRef]);
+  }, [id, user?.uid]);
 
-  const handleNameChange = (e) => {
-    setNewName(e.target.value);
-  };
   const navigateToDoc = () => {
     navigate(`/doc/${id}`);
   };
+
   return (
     <>
       <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
@@ -96,35 +94,30 @@ const DocItem = ({ id, name, date }) => {
           </p>
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <Article style={{ color: "#1A73E8" }} />
+              <FileText style={{ color: "#1A73E8" }} />
               <p className="text-sm text-gray-400 ml-3">
-                {date && date.toDate().toLocaleDateString()}
+                {date && date.toDate().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
               </p>
             </div>
-            <MoreVert
+            <EllipsisVertical
               className="cursor-pointer p-1"
-              sx={{ fontSize: 30 }}
               onClick={handleClick}
             />
           </div>
         </div>
       </div>
+
       <Menu
         anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          sx: {
-            bgcolor: "var(--color-bg-primary)",
-            color: "var(--color-text-primary)",
-          },
-        }}
-      >
-        <MenuItem onClick={handleRenameModalOpen}>Rename Document</MenuItem>
-        <MenuItem onClick={handleDeleteModalOpen}>Delete Document</MenuItem>
-      </Menu>
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        options={[
+          { label: "Rename Document", onClick: handleRenameModalOpen },
+          { label: "Delete Document", onClick: handleDeleteModalOpen, danger: true },
+        ]}
+        offsetX={-20} // adjust if needed
+        offsetY={5}
+      />
       <CustomModal
         isOpen={deleteModalOpen}
         onClose={handleDeleteModalClose}
@@ -135,7 +128,7 @@ const DocItem = ({ id, name, date }) => {
         </p>
         <div className="flex items-center justify-around mt-5">
           <button
-            onClick={() => deleteDocument(id)}
+            onClick={deleteDocument}
             className="bg-red-500 text-white px-8 py-2 rounded-xl hover:shadow-2xl hover:bg-red-600"
           >
             Yes
@@ -148,7 +141,6 @@ const DocItem = ({ id, name, date }) => {
           </button>
         </div>
       </CustomModal>
-      {/* Rename Document Modal */}
       <CustomModal
         isOpen={renameModalOpen}
         onClose={handleRenameModalClose}
@@ -164,7 +156,7 @@ const DocItem = ({ id, name, date }) => {
           />
           <div className="flex items-center justify-around mt-5">
             <button
-              onClick={() => updateName(id)}
+              onClick={updateName}
               className={`bg-blue-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-blue-600 ${!newName && "opacity-50 cursor-not-allowed"
                 }`}
               disabled={!newName}

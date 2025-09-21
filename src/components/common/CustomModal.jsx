@@ -1,22 +1,22 @@
-import { Box, Modal } from "@mui/material";
-
 const CustomModal = ({ isOpen, onClose, title, children }) => {
+  if (!isOpen) return null;
+
   return (
-    <Modal
-      open={isOpen}
-      onClose={onClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box
-        className="absolute top-[50%] left-[50%] w-[400px] p-6 bg-primary shadow-lg rounded-xl"
-        style={{ transform: "translate(-50%, -50%)" }}
-      >
-        <h2 id="modal-modal-title" className="text-xl font-bold mb-4">
-          {title}
-        </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="w-[400px] p-6 bg-primary shadow-lg rounded-xl relative">
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
+
+        <h2 className="text-xl text-primary font-bold mb-4">{title}</h2>
+
         {children}
-      </Box>
-    </Modal>
+      </div>
+    </div>
   );
 };
+
+export default CustomModal;

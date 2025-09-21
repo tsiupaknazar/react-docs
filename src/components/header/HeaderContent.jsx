@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Description } from "@mui/icons-material";
+import { FileText } from 'lucide-react';
 import Search from "./Search";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
@@ -57,15 +57,7 @@ const HeaderContent = ({
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center justify-center">
         <Link to="/">
-          <Description
-            sx={{
-              color: "#4385F3",
-              width: "40px",
-              height: "40px",
-              cursor: "pointer",
-            }}
-            alt="Home"
-          />
+          <FileText size={40} className="cursor-pointer" color="#4385F3" />
         </Link>
         {location.pathname === "/" ? (
           <h1 className="ml-2 text-primary text-2xl hidden md:inline-flex">Docs</h1>

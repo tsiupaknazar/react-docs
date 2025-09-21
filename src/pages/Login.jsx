@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { auth, firestore } from "../firebase/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { Description, Google } from "@mui/icons-material";
-import Loader from "../components/loader/Loader"; 
+import { FileText } from "lucide-react";
+import Loader from "../components/loader/Loader";
 
 const Login = () => {
   const { setUser } = useContext(AuthContext);
@@ -26,7 +26,7 @@ const Login = () => {
   const login = () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
- 
+
     signInWithPopup(auth, provider)
       .then(({ user }) => {
         const docRef = doc(firestore, "users", `${user?.uid}`);
@@ -49,17 +49,14 @@ const Login = () => {
 
   return (
     <>
-    {loading && <Loader />}
+      {loading && <Loader />}
       <div className="flex flex-col items-center justify-center h-100 min-h-screen">
-        <Description
-          sx={{ color: "#4385F3", width: "200px", height: "200px" }}
-        />
+        <FileText size={200} color="#4385F3" />
         <h1 className="font-bold text-5xl mb-5">React Docs</h1>
         <button
           className="bg-blue-500 text-white px-10 py-2 rounded-lg hover:shadow-2xl hover:bg-blue-600 flex items-center justify-between"
           onClick={login}
         >
-          <Google />
           <span className="ml-2">Login with Google</span>
         </button>
       </div>

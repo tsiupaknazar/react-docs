@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 import { firestore } from '../firebase/firebase'
 import { doc, updateDoc, onSnapshot } from 'firebase/firestore'
 
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import Loader from '../components/loader/Loader'
 import Header from '../components/header/Header'
 
@@ -98,7 +98,6 @@ const Editor = () => {
         className="rounded-none"
 
       />
-      <ToastContainer />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { MenuItem, Menu, Divider, Modal, Box } from "@mui/material";
+// import { MenuItem, Menu, Divider, Modal, Box } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -8,36 +8,27 @@ import { auth } from "../../firebase/firebase";
 import HeaderContent from "./HeaderContent";
 import ThemeToggle from "../common/ThemeToggle";
 import SaveDocBtn from "./SaveDocBtn";
+import CustomModal from "../common/CustomModal";
+import Menu from "../common/Menu";
 
 const Header = ({ docName, handleSave, setSearchInput, docId }) => {
   const { user, setUser } = useContext(AuthContext);
   const location = useLocation();
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => setModalOpen(false);
-
   const navigate = useNavigate();
+
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleMenuOpen = (e) => setMenuAnchor(e.currentTarget);
+  const handleMenuClose = () => setMenuAnchor(null);
 
   const logout = () => {
     setUser(null);
-    signOut(auth).then(() => {
-      navigate("/login");
-    });
+    signOut(auth).then(() => navigate("/login"));
   };
 
-  const handleSearchChange = (event) => {
-    setSearchInput(event.target.value);
-  };
+  const handleSearchChange = (event) => setSearchInput(event.target.value);
+
   return (
     <>
       <header className="sticky top-0 z-40 bg-primary shadow-md min-w-full flex items-center justify-between py-4 px-8 dark:border-b-2">
@@ -55,83 +46,54 @@ const Header = ({ docName, handleSave, setSearchInput, docId }) => {
             alt={user?.displayName}
             title={user?.displayName}
             className="cursor-pointer h-8 w-8 rounded-full ml-2"
-            onClick={handleClick}
+            onClick={handleMenuOpen}
           />
         </div>
       </header>
+
       <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            bgcolor: "var(--color-bg-primary)",
-            color: "var(--color-text-primary)",
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "var(--color-bg-primary)",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
-            },
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleMenuClose}
+        options={[
+          {
+            label: (
+              <div>
+                {user?.displayName} <br />
+                <span className="text-xs">{user?.email}</span>
+              </div>
+            ),
+            onClick: handleMenuClose,
           },
-        }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          { label: "Logout", onClick: () => setModalOpen(true), danger: true },
+        ]}
+        offsetX={-150}
+        offsetY={8}
+      />
+
+
+      <CustomModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Logout"
       >
-        <MenuItem onClick={handleClose}>
-          <p className="py-1 px-4 text-base break-words font-manrope font-normal leading-5 tracking-wide">
-            {user?.displayName ? user?.displayName : "User account"} <br />{" "}
-            <span className="text-xs">{user?.email}</span>
-          </p>
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleModalOpen}>Logout</MenuItem>
-      </Menu>
-      <Modal
-        open={modalOpen}
-        onClose={handleModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          className="absolute top-[50%] left-[50%] w-[auto] p-10 bg-primary shadow-lg rounded-xl"
-          style={{ transform: "translate(-50%, -50%)" }}
-        >
-          <p className="font-light">Do you really want to exit?</p>
-          <div className="flex items-center justify-between mt-5">
-            <button
-              onClick={() => logout()}
-              className="bg-red-500 text-white px-8 py-2 rounded-xl hover:shadow-2xl hover:bg-red-600"
-            >
-              Yes
-            </button>
-            <button
-              className="bg-white text-blue-500 px-8 py-2 rounded-xl hover:bg-gray-100"
-              onClick={() => setModalOpen(false)}
-            >
-              No
-            </button>
-          </div>
-        </Box>
-      </Modal>
+        <p className="font-light">Do you really want to exit?</p>
+        <div className="flex items-center justify-between gap-5 mt-5">
+          <button
+            onClick={logout}
+            className="w-full bg-red-500 text-primary px-8 py-2 rounded-xl hover:shadow-2xl hover:bg-red-600"
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            onClick={() => setModalOpen(false)}
+            className="w-full bg-secondary text-blue-500 px-8 py-2 rounded-xl hover:bg-primary"
+          >
+            No
+          </button>
+        </div>
+      </CustomModal>
     </>
   );
 };

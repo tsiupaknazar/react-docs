@@ -1,4 +1,4 @@
-import { Search as SearchIcon } from "@mui/icons-material";
+import { Search as SearchIcon } from 'lucide-react';
 
 const Search = ({ handleSearchChange }) => {
   return (
