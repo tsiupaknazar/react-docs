@@ -17,7 +17,7 @@ const getInitialTheme = () => {
 
 export const ThemeContext = createContext();
 
-export const ThemeProvider = ({ initialTheme, children }) => {
+export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(getInitialTheme);
 
   const setThemeLocally = (theme) => {
@@ -33,12 +33,6 @@ export const ThemeProvider = ({ initialTheme, children }) => {
   useEffect(() => {
     setThemeLocally(theme);
   }, [theme]);
-
-  useEffect(() => {
-    if (initialTheme) {
-      setTheme(initialTheme);
-    }
-  }, [initialTheme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
