@@ -88,7 +88,7 @@ const Editor = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-${theme}-100 text-black`}>
+    <div className={`min-h-screen bg-primary text-primary`}>
       <Header docName={userDoc?.name} handleSave={handleSave} docId={id} />
       <RichTextEditor
         output='html'
