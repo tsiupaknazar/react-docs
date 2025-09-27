@@ -5,11 +5,13 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
 import DocItem from "./DocItem";
+import Loader from "../loader/Loader";
 
 const DocsList = ({ searchInput }) => {
   const { user } = useContext(AuthContext);
 
   const [userDoc, setUserDoc] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsub = onSnapshot(
@@ -24,6 +26,8 @@ const DocsList = ({ searchInput }) => {
           );
         } catch (error) {
           console.error("Error fetching documents:", error);
+        } finally {
+          setLoading(false);
         }
       }
     );
@@ -36,25 +40,27 @@ const DocsList = ({ searchInput }) => {
 
   return (
     <div className="flex flex-wrap gap-6 sm:justify-normal justify-center">
-      {userDoc?.length === 0 && (
+      {loading && <Loader />}
+      {!loading && userDoc.length === 0 && (
         <div className="w-full text-center py-5">
-          No Documents. Create your first document by click on{" "}
+          No Documents. Create your first document by clicking{" "}
           <span className="text-blue-500">Create New</span> button
         </div>
       )}
-      {filteredDocs?.length === 0 && userDoc?.length > 0 && (
+      {!loading && filteredDocs.length === 0 && userDoc.length > 0 && (
         <div className="w-full text-center py-5">
           No Documents found. Try another search
         </div>
       )}
-      {filteredDocs?.map((doc) => (
-        <DocItem
-          id={doc?.id || ""}
-          key={doc?.id || ""}
-          name={doc?.name || ""}
-          date={doc?.time || ""}
-        />
-      ))}
+      {!loading &&
+        filteredDocs.map((doc) => (
+          <DocItem
+            id={doc.id}
+            key={doc.id}
+            name={doc.name}
+            date={doc.time}
+          />
+        ))}
     </div>
   );
 };

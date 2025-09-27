@@ -42,3 +42,35 @@
 .reactjs-tiptap-editor {
   border-radius: 0 !important;
 }
+
+/* Toastify wrapper override */
+/* Global / default (light theme) */
+:root {
+  --toastify-color-light: var(--color-bg-primary);
+  --toastify-color-dark: var(--color-bg-primary);
+  --toastify-color-success: #22c55e; /* or use var(--color-text-accent) */
+  --toastify-color-error: #ef4444;
+  --toastify-color-info: #3b82f6;
+  --toastify-color-warning: #facc15;
+
+  --toastify-text-color-light: var(--color-text-primary);
+  --toastify-text-color-dark: var(--color-text-primary);
+  --toastify-text-color-success: var(--color-text-primary);
+  --toastify-text-color-error: var(--color-text-primary);
+  --toastify-text-color-info: var(--color-text-primary);
+  --toastify-text-color-warning: var(--color-text-primary);
+
+  --toastify-toast-background: var(--color-bg-secondary);
+  --toastify-toast-padding: 14px;
+  --toastify-toast-bd-radius: 1rem; /* rounded-xl */
+  --toastify-toast-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Dark theme overrides */
+.dark {
+  --toastify-color-light: var(--color-bg-primary);
+  --toastify-color-dark: var(--color-bg-primary);
+  --toastify-toast-background: var(--color-bg-secondary);
+  --toastify-text-color-light: var(--color-text-primary);
+  --toastify-text-color-dark: var(--color-text-primary);
+}

@@ -13,6 +13,7 @@ import { doc, updateDoc, onSnapshot } from 'firebase/firestore'
 import { toast } from 'react-toastify'
 import Loader from '../components/loader/Loader'
 import Header from '../components/header/Header'
+// import CustomToast from '../components/common/CustomToast';
 
 
 const Editor = () => {
@@ -54,6 +55,7 @@ const Editor = () => {
     }, (error) => {
       console.error("Error loading document:", error);
       toast.error("Error loading document");
+      // toast(<CustomToast title="Error" message="Custom Error loading document" />);
       setLoading(false);
     });
 
@@ -73,9 +75,11 @@ const Editor = () => {
       const docRef = doc(firestore, 'userDocs', user.uid, 'docs', id);
       await updateDoc(docRef, { content });
       toast.success('Document successfully saved!');
+      // toast.success(<CustomToast title="Success" message="Custom Document successfully saved!" />);
     } catch (error) {
       console.error('Error saving document:', error);
       toast.error('Error saving document');
+      // toast(<CustomToast title="Error" message="Custom Error saving document" />);
     }
   };
 
@@ -96,7 +100,7 @@ const Editor = () => {
         onChangeContent={onChangeContent}
         extensions={extensions}
         className="rounded-none"
-
+        dark={theme === "dark"}
       />
     </div>
   );

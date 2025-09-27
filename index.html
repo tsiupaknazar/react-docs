@@ -14,18 +14,6 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
-  <script>
-    (function () {
-      try {
-        const storedPrefs = localStorage.getItem("color-theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const theme = storedPrefs || (prefersDark ? "dark" : "light");
-        document.documentElement.classList.add(theme);
-      } catch (e) {
-        document.documentElement.classList.add("dark");
-      }
-    })();
-  </script>
 </body>
 
 </html>

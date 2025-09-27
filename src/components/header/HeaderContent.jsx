@@ -6,6 +6,7 @@ import { firestore } from "../../firebase/firebase";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
+import CustomToast from "../common/CustomToast";
 
 const HeaderContent = ({
   location,
@@ -29,7 +30,8 @@ const HeaderContent = ({
       await updateDoc(docRef, { name });
     } catch (error) {
       console.error("Error updating document: ", error);
-      toast.error("Error updating document name");
+      // toast.error("Error updating document name");
+      toast(<CustomToast title="Error" message="Error updating document name" />);
     }
   };
 
