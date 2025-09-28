@@ -7,11 +7,11 @@ import { auth } from "../../firebase/firebase";
 
 import HeaderContent from "./HeaderContent";
 import ThemeToggle from "../common/ThemeToggle";
-import SaveDocBtn from "./SaveDocBtn";
+// import SaveDocBtn from "./SaveDocBtn";
 import CustomModal from "../common/CustomModal";
 import Menu from "../common/Menu";
 
-const Header = ({ docName, handleSave, setSearchInput, docId }) => {
+const Header = ({ docName, setSearchInput, docId, status }) => {
   const { user, setUser } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,7 +39,8 @@ const Header = ({ docName, handleSave, setSearchInput, docId }) => {
           docId={docId}
         />
         <div className="flex items-center justify-between">
-          {location.pathname !== "/" && <SaveDocBtn handleSave={handleSave} />}
+          {/* {location.pathname !== "/" && <SaveDocBtn handleSave={handleSave} />} */}
+          {status && <span className="flex-1 text-center mr-4 text-sm text-secondary">{status}</span>}
           <ThemeToggle />
           <img
             src={user?.photoURL}

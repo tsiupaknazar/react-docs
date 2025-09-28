@@ -7,11 +7,14 @@ import { firestore } from "../../firebase/firebase";
 import DocItem from "./DocItem";
 import Loader from "../loader/Loader";
 
-const DocsList = ({ searchInput }) => {
+import { sortDocs } from "../../utils/sortDocs";
+
+const DocsList = ({ searchInput, sortType, sortOrder = "asc", viewType }) => {
   const { user } = useContext(AuthContext);
 
   const [userDoc, setUserDoc] = useState([]);
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const unsub = onSnapshot(
@@ -38,27 +41,23 @@ const DocsList = ({ searchInput }) => {
     doc.name.toLowerCase().includes(searchInput.toLowerCase())
   );
 
+  const sortedDocs = sortDocs(filteredDocs, sortType, sortOrder);
+
   return (
-    <div className="flex flex-wrap gap-6 sm:justify-normal justify-center">
+    <div className={
+      viewType === "grid"
+        ? "flex flex-wrap gap-6 sm:justify-normal justify-center"
+        : "flex flex-col divide-y"
+    }>
       {loading && <Loader />}
-      {!loading && userDoc.length === 0 && (
-        <div className="w-full text-center py-5">
-          No Documents. Create your first document by clicking{" "}
-          <span className="text-blue-500">Create New</span> button
-        </div>
-      )}
-      {!loading && filteredDocs.length === 0 && userDoc.length > 0 && (
-        <div className="w-full text-center py-5">
-          No Documents found. Try another search
-        </div>
-      )}
       {!loading &&
-        filteredDocs.map((doc) => (
+        sortedDocs.map((doc) => (
           <DocItem
             id={doc.id}
             key={doc.id}
             name={doc.name}
             date={doc.time}
+            viewType={viewType}
           />
         ))}
     </div>

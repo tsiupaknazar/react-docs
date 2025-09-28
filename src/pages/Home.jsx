@@ -9,12 +9,21 @@ import Header from "../components/header/Header";
 import DocsList from "../components/docs/DocsList";
 import Loader from "../components/loader/Loader";
 import CustomModal from "../components/common/CustomModal";
+import Dropdown from "../components/common/Dropdown";
+
+import { sortOptions } from "../utils/sortOptions";
+// import { useLocalStorage } from "../hooks/useLocalStorage";
+
+import { List, Table } from 'lucide-react';
 
 const Home = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+  const [viewType, setViewType] = useState("grid");
+
+  const [sortType, setSortType] = useState("date-newest");
 
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -61,16 +70,30 @@ const Home = () => {
       <Header setSearchInput={setSearchInput} />
       <section className="bg-primary pb-10 md:px-40 px-10">
         <div className="max-w-screen mx-auto">
-          <div className="py-6 flex items-center justify-between">
+          <div className="py-6 flex flex-wrap items-center justify-between">
             <h2 className="text-primary text-xl">Last Documents:</h2>
-            <button
-              onClick={handleOpen}
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-blue-600"
-            >
-              Create New
-            </button>
+            <div className="flex items-center gap-5">
+              <button
+                onClick={() => setViewType(viewType === "grid" ? "list" : "grid")}
+                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-blue-600"
+              >
+                {viewType === "grid" ? <List /> : <Table />}
+              </button>
+              <Dropdown
+                options={sortOptions}
+                value={sortType}
+                onChange={setSortType}
+                placeholder="Sort by..." />
+
+              <button
+                onClick={handleOpen}
+                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-blue-600"
+              >
+                Create New
+              </button>
+            </div>
           </div>
-          <DocsList searchInput={searchInput} />
+          <DocsList viewType={viewType} searchInput={searchInput} sortType={sortType} sortOrder="desc" />
         </div>
       </section>
       <CustomModal isOpen={open} onClose={handleClose} title="Create Document">

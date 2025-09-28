@@ -39,7 +39,15 @@
   @apply light;
 }
 
+/* .richtext-max-h-full {
+  min-height: 100vh !important;
+} */
+
 .reactjs-tiptap-editor {
+  min-height: 80vh !important;
+}
+
+.richtext-rounded-\[0\.5rem\] {
   border-radius: 0 !important;
 }
 

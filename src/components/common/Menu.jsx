@@ -10,7 +10,6 @@ const CustomMenu = ({
 }) => {
     const menuRef = useRef(null);
 
-    // Close menu if clicked outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {

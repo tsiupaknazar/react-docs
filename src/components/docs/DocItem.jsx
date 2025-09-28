@@ -10,7 +10,7 @@ import Menu from "../common/Menu";
 import CustomModal from "../common/CustomModal";
 import DocPreview from "./DocPreview";
 
-const DocItem = ({ id, name, date }) => {
+const DocItem = ({ id, name, date, viewType }) => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
@@ -78,34 +78,58 @@ const DocItem = ({ id, name, date }) => {
 
   return (
     <>
-      <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
-        <div
-          onClick={navigateToDoc}
-          className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center"
-        >
-          <DocPreview content={fileContent} />
-        </div>
-        <div className="p-4 border-t flex flex-col">
-          <p
+      {viewType === "grid" && (
+        <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
+          <div
             onClick={navigateToDoc}
-            className="font-bold text-md text-primary cursor-pointer"
+            className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center"
           >
-            {name || "Filename"}
-          </p>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <FileText style={{ color: "#1A73E8" }} />
-              <p className="text-sm text-gray-400 ml-3">
-                {date && date.toDate().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-              </p>
+            <DocPreview content={fileContent} />
+          </div>
+          <div className="p-4 border-t flex flex-col">
+            <p
+              onClick={navigateToDoc}
+              className="font-bold text-md text-primary cursor-pointer"
+            >
+              {name || "Filename"}
+            </p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <FileText style={{ color: "#1A73E8" }} />
+                <p className="text-sm text-gray-400 ml-3">
+                  {date && date.toDate().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                </p>
+              </div>
+              <EllipsisVertical
+                className="cursor-pointer p-1"
+                onClick={handleClick}
+              />
             </div>
+          </div>
+        </div>
+      )}
+      {viewType === "list" && (
+        <div className="flex items-center justify-between p-4 border-b hover:bg-secondary cursor-pointer">
+          <div className="flex items-center gap-4" onClick={navigateToDoc}>
+            <FileText style={{ color: "#1A73E8" }} />
+            <p
+              onClick={navigateToDoc}
+              className="font-bold text-md text-primary cursor-pointer"
+            >
+              {name || "Filename"}
+            </p>
+          </div>
+          <div className="flex items-center md:gap-32 gap-10">
+            <p className="text-sm text-gray-400 ml-3">
+              {date && date.toDate().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+            </p>
             <EllipsisVertical
               className="cursor-pointer p-1"
               onClick={handleClick}
             />
           </div>
         </div>
-      </div>
+      )}
 
       <Menu
         anchorEl={anchorEl}
@@ -115,7 +139,7 @@ const DocItem = ({ id, name, date }) => {
           { label: "Rename Document", onClick: handleRenameModalOpen },
           { label: "Delete Document", onClick: handleDeleteModalOpen, danger: true },
         ]}
-        offsetX={-20} // adjust if needed
+        offsetX={-20}
         offsetY={5}
       />
       <CustomModal
