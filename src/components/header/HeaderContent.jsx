@@ -7,6 +7,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import CustomToast from "../common/CustomToast";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const HeaderContent = ({
   location,
@@ -15,6 +16,7 @@ const HeaderContent = ({
   docId
 }) => {
   const { user } = useContext(AuthContext);
+  const {theme} = useContext(ThemeContext);
 
   const docRef = user?.uid && docId
     ? doc(firestore, "userDocs", `${user.uid}`, "docs", docId)
@@ -85,7 +87,11 @@ const HeaderContent = ({
       {location.pathname === "/" && (
         <Search handleSearchChange={handleSearchChange} />
       )}
-      <ToastContainer />
+      <ToastContainer
+        hideProgressBar={true}
+        closeOnClick
+        theme={theme}
+      />
     </div>
   );
 };

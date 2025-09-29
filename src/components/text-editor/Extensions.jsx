@@ -26,11 +26,13 @@ import { Table } from 'reactjs-tiptap-editor/table';
 import { TextAlign } from 'reactjs-tiptap-editor/textalign';
 import { TextUnderline } from 'reactjs-tiptap-editor/textunderline';
 import { TextDirection } from 'reactjs-tiptap-editor/textdirection';
+import { ExportPdf } from 'reactjs-tiptap-editor/exportpdf';
+import { ExportWord } from 'reactjs-tiptap-editor/exportword';
 
 export const extensions = [
     BaseKit.configure({
         placeholder: {
-            showOnlyCurrent: true,
+            placeholder: '',
         },
         characterCount: {
             limit: 50_000,
@@ -72,6 +74,8 @@ export const extensions = [
     ColumnActionButton,
     Table,
     Iframe,
+    ExportPdf,
+    ExportWord,
     // Mention,
     // Attachment.configure({ ... }),
 ];

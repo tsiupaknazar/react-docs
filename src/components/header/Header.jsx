@@ -40,7 +40,7 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
         />
         <div className="flex items-center justify-between">
           {/* {location.pathname !== "/" && <SaveDocBtn handleSave={handleSave} />} */}
-          {status && <span className="flex-1 text-center mr-4 text-sm text-secondary">{status}</span>}
+          {status && <span className="flex-1 w-full text-sm text-secondary">{status}</span>}
           <ThemeToggle />
           <img
             src={user?.photoURL}

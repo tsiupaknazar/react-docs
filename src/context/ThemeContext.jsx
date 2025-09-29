@@ -35,9 +35,6 @@ export const ThemeProvider = ({ children }) => {
     root.classList.remove("light", "dark");
     root.classList.add(theme);
 
-    //test
-    // console.log("Applied theme:", theme, root.className);
-
     localStorage.setItem("color-theme", theme);
   }, [theme]);
 
