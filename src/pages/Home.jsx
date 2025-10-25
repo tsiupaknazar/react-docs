@@ -12,7 +12,6 @@ import CustomModal from "../components/common/CustomModal";
 import Dropdown from "../components/common/Dropdown";
 
 import { sortOptions } from "../utils/sortOptions";
-// import { useLocalStorage } from "../hooks/useLocalStorage";
 
 import { List, Table } from 'lucide-react';
 

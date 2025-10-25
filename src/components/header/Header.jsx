@@ -7,7 +7,6 @@ import { auth } from "../../firebase/firebase";
 
 import HeaderContent from "./HeaderContent";
 import ThemeToggle from "../common/ThemeToggle";
-// import SaveDocBtn from "./SaveDocBtn";
 import CustomModal from "../common/CustomModal";
 import Menu from "../common/Menu";
 
@@ -39,12 +38,10 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
           docId={docId}
         />
         <div className="flex items-center justify-between">
-          {/* {location.pathname !== "/" && <SaveDocBtn handleSave={handleSave} />} */}
           {status && <span className="flex-1 w-full text-sm text-secondary">{status}</span>}
           <ThemeToggle />
           <img
-            src={user?.photoURL}
-            alt={user?.displayName}
+            src={'/default-avatar.png'}
             title={user?.displayName}
             className="cursor-pointer h-8 w-8 rounded-full ml-2"
             onClick={handleMenuOpen}

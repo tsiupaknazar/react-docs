@@ -14,14 +14,6 @@ import { doc, updateDoc, onSnapshot } from 'firebase/firestore'
 import { toast } from 'react-toastify'
 import Loader from '../components/loader/Loader'
 import Header from '../components/header/Header'
-// import CustomToast from '../components/common/CustomToast';
-
-// import jsPDF from "jspdf";
-// import html2canvas from "html2canvas";
-// import { saveAs } from "file-saver";
-// import { Document, Packer, Paragraph } from "docx";
-// import HTMLtoDOCX from "html-to-docx";
-
 
 const Editor = () => {
   const { user } = useContext(AuthContext);
@@ -85,11 +77,10 @@ const Editor = () => {
         const docRef = doc(firestore, 'userDocs', user.uid, 'docs', id);
         await updateDoc(docRef, { content: newContent });
         lastSavedRef.current = newContent;
-        setAutosaveStatus('✅ Saved successfully');
-        // toast.success('Document autosaved');
+        setAutosaveStatus('Saved successfully');
       } catch (error) {
         toast.error('Error autosaving document');
-        setAutosaveStatus('❌ Error saving document');
+        setAutosaveStatus('Error saving document');
       }
     }, 1500),
     [user?.uid, id]
@@ -109,20 +100,6 @@ const Editor = () => {
     <div className={`min-h-screen bg-primary text-primary`}>
       <div style={{ position: "absolute", left: "-9999px", top: 0 }} ref={pdfRef} dangerouslySetInnerHTML={{ __html: content }} />
       <Header docName={userDoc?.name} status={autosaveStatus} handleSave={() => debouncedSave.flush()} docId={id} />
-      {/* <div className="flex gap-2 p-2">
-        <button
-          // onClick={handleDownloadWord}
-          className="px-3 py-1 rounded bg-blue-500 text-white"
-        >
-          Export Word
-        </button>
-        <button
-          onClick={handleDownloadPdf}
-          className="px-3 py-1 rounded bg-green-500 text-white"
-        >
-          Export PDF
-        </button>
-      </div> */}
       <RichTextEditor
         output='html'
         content={content}

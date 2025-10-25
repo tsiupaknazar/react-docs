@@ -2,7 +2,6 @@ import { BaseKit } from 'reactjs-tiptap-editor';
 import { Blockquote } from 'reactjs-tiptap-editor/blockquote';
 import { Bold } from 'reactjs-tiptap-editor/bold';
 import { BulletList } from 'reactjs-tiptap-editor/bulletlist';
-import { Code } from 'reactjs-tiptap-editor/code';
 import { CodeBlock } from 'reactjs-tiptap-editor/codeblock';
 import { Color } from 'reactjs-tiptap-editor/color';
 import { ColumnActionButton } from 'reactjs-tiptap-editor/multicolumn';
@@ -18,7 +17,6 @@ import { Indent } from 'reactjs-tiptap-editor/indent';
 import { Italic } from 'reactjs-tiptap-editor/italic';
 import { LineHeight } from 'reactjs-tiptap-editor/lineheight';
 import { Link } from 'reactjs-tiptap-editor/link';
-// import { Mention } from 'reactjs-tiptap-editor/mention';
 import { MoreMark } from 'reactjs-tiptap-editor/moremark';
 import { OrderedList } from 'reactjs-tiptap-editor/orderedlist';
 import { Strike } from 'reactjs-tiptap-editor/strike';
@@ -67,15 +65,10 @@ export const extensions = [
         },
     }),
     Blockquote,
-    Code.configure({
-        toolbar: false,
-    }),
     CodeBlock,
     ColumnActionButton,
     Table,
     Iframe,
     ExportPdf,
     ExportWord,
-    // Mention,
-    // Attachment.configure({ ... }),
 ];
