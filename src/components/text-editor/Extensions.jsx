@@ -10,6 +10,7 @@ import { FontFamily } from 'reactjs-tiptap-editor/fontfamily';
 import { FontSize } from 'reactjs-tiptap-editor/fontsize';
 import { Heading } from 'reactjs-tiptap-editor/heading';
 import { Highlight } from 'reactjs-tiptap-editor/highlight';
+import { HorizontalRule } from 'reactjs-tiptap-editor/horizontalrule';
 import { History } from 'reactjs-tiptap-editor/history';
 import { Iframe } from 'reactjs-tiptap-editor/iframe';
 import { Image } from 'reactjs-tiptap-editor/image';
@@ -49,6 +50,7 @@ export const extensions = [
     Emoji,
     Color.configure({ spacer: true }),
     Highlight,
+    HorizontalRule,
     BulletList,
     OrderedList,
     TextAlign.configure({ types: ['heading', 'paragraph'], spacer: true }),

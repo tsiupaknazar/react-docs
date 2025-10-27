@@ -15,6 +15,8 @@ import { sortOptions } from "../utils/sortOptions";
 
 import { List, Table } from 'lucide-react';
 
+import { templates } from "../utils/templates";
+
 const Home = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
@@ -23,6 +25,8 @@ const Home = () => {
   const [viewType, setViewType] = useState("grid");
 
   const [sortType, setSortType] = useState("date-newest");
+
+  const [selectedTemplate, setSelectedTemplate] = useState(templates[0].id);
 
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -35,11 +39,14 @@ const Home = () => {
     setInput("");
     setOpen(false);
 
+    const chosenTemplate = templates.find(t => t.id === selectedTemplate);
+
     const docRef = await addDoc(
       collection(firestore, "userDocs", `${user?.uid}`, "docs"),
       {
         name: `${input}`,
         time: serverTimestamp(),
+        content: chosenTemplate ? chosenTemplate.content : "<p></p>",
       }
     );
     navigate(`/doc/${docRef?.id}`);
@@ -109,7 +116,17 @@ const Home = () => {
             onChange={({ target }) => setInput(target.value)}
             value={input}
           />
-
+          <select
+            className="mt-3 p-2 w-full bg-secondary text-primary rounded-lg"
+            value={selectedTemplate}
+            onChange={(e) => setSelectedTemplate(e.target.value)}
+          >
+            {templates.map((tpl) => (
+              <option key={tpl.id} value={tpl.id}>
+                {tpl.name}
+              </option>
+            ))}
+          </select>
           <div className="flex items-center justify-between gap-5 mt-5">
             <button
               type="submit"
