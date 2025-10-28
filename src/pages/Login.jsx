@@ -49,7 +49,7 @@ const Login = () => {
 
   return (
     <>
-      {loading && <Loader />}
+      {loading && <Loader type="docs" />}
       <div className="flex flex-col items-center justify-center h-100 min-h-screen">
         <FileText size={200} color="#4385F3" />
         <h1 className="font-bold text-5xl mb-5">React Docs</h1>

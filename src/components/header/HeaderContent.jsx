@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FileText } from 'lucide-react';
+import { FileText, FileSpreadsheet } from 'lucide-react';
 import Search from "./Search";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
@@ -16,7 +16,7 @@ const HeaderContent = ({
   docId
 }) => {
   const { user } = useContext(AuthContext);
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   const docRef = user?.uid && docId
     ? doc(firestore, "userDocs", `${user.uid}`, "docs", docId)
@@ -60,11 +60,19 @@ const HeaderContent = ({
   return (
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center justify-center">
-        <Link to="/">
-          <FileText size={40} className="cursor-pointer" color="#4385F3" />
-        </Link>
+        {location.pathname === "/" || location.pathname.includes("doc") ? (
+          <Link to="/">
+            <FileText size={40} className="cursor-pointer" color="#4385F3" />
+          </Link>
+        ) : (
+          <Link to="/spreadsheets">
+            <FileSpreadsheet className="cursor-pointer" size={40} color="#2bff00" />
+          </Link>
+        )}
         {location.pathname === "/" ? (
           <h1 className="ml-2 text-primary text-2xl hidden md:inline-flex">Docs</h1>
+        ) : location.pathname === "/spreadsheets" ? (
+          <h1 className="ml-2 text-primary text-2xl hidden md:inline-flex">Sheets</h1>
         ) : editing ? (
           <input
             className="ml-2 text-primary text-2xl border-b outline-none bg-transparent"
@@ -84,7 +92,7 @@ const HeaderContent = ({
           </h1>
         )}
       </div>
-      {location.pathname === "/" && (
+      {location.pathname === "/" || location.pathname === "/spreadsheets" && (
         <Search handleSearchChange={handleSearchChange} />
       )}
       <ToastContainer

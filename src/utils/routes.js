@@ -1,6 +1,8 @@
 export const AppRoute = {
     LOGIN: '/login',
     HOME: '/',
-    EDITOR: '/doc/:id',
+    DOCS_EDITOR: '/doc/:id',
+    SPREADSHEETS: "/spreadsheets",
+    SPREADSHEETS_EDITOR: '/sheet/:id',
     NOTFOUND: '*'
 };

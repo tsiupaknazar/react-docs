@@ -63,7 +63,7 @@ const Home = () => {
   }, []);
 
   if (loading) {
-    return <Loader />;
+    return <Loader type="docs" />;
   }
 
   if (user === null) {
@@ -89,7 +89,9 @@ const Home = () => {
                 options={sortOptions}
                 value={sortType}
                 onChange={setSortType}
-                placeholder="Sort by..." />
+                placeholder="Sort by..." 
+                color="#3b82f6"
+                />
 
               <button
                 onClick={handleOpen}

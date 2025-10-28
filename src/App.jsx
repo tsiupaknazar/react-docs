@@ -4,10 +4,12 @@ import { AuthProvider } from "./context/AuthContext";
 import { AppRoute } from "./utils/routes";
 
 import Home from "./pages/Home";
-import Editor from "./pages/Editor";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./context/ThemeContext";
+import DocsEditor from "./pages/docs/DocsEditor";
+import SpreadsheetsHome from "./pages/spreadsheets/SpreadsheetsHome";
+import SpreadsheetsEditor from "./pages/spreadsheets/SpreadsheetsEditor";
 
 const App = () => {
   return (
@@ -16,8 +18,13 @@ const App = () => {
         <Router>
           <Routes>
             <Route path={AppRoute.LOGIN} element={<Login />} />
+
             <Route path={AppRoute.HOME} element={<Home />} />
-            <Route path={AppRoute.EDITOR} element={<Editor />} />
+            <Route path={AppRoute.DOCS_EDITOR} element={<DocsEditor />} />
+
+            <Route path={AppRoute.SPREADSHEETS} element={<SpreadsheetsHome />} />
+            <Route path={AppRoute.SPREADSHEETS_EDITOR} element={<SpreadsheetsEditor />} />
+
             <Route path={AppRoute.NOTFOUND} element={<NotFound />} />
           </Routes>
         </Router>

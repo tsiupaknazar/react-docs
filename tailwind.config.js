@@ -4,24 +4,17 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
-      backgroundColor: {
+      colors: {
         primary: "var(--color-bg-primary)",
         secondary: "var(--color-bg-secondary)",
         button: "var(--color-bg-button)",
-      },
-      textColor: {
         accent: "var(--color-text-accent)",
-        primary: "var(--color-text-primary)",
-        secondary: "var(--color-text-secondary)",
-        btnText: "var(--color-bg-secondary)",
-      },
-      borderColor: {
-        primary: "var(--color-bg-primary)",
-        secondary: "var(--color-bg-secondary)",
+        "text-primary": "var(--color-text-primary)",
+        "text-secondary": "var(--color-text-secondary)",
+        "btn-text": "var(--color-bg-secondary)",
         input: "var(--color-bg-input)",
-        accent: "var(--color-text-accent)",
         doc: "var(--color-doc)",
-        docHover: "var(--color-doc-hover)",
+        "doc-hover": "var(--color-doc-hover)",
       },
     },
   },

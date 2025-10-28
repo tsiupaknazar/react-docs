@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const Dropdown = ({ options, value, onChange, placeholder = "Select..." }) => {
+const Dropdown = ({ options, value, onChange, placeholder = "Select...", color }) => {
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -20,7 +20,8 @@ const Dropdown = ({ options, value, onChange, placeholder = "Select..." }) => {
         <div className="relative inline-block w-48" ref={dropdownRef}>
             <button
                 onClick={() => setOpen((prev) => !prev)}
-                className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex justify-between items-center"
+                style={{backgroundColor: color}}
+                className="w-full text-white px-4 py-2 rounded-lg flex justify-between items-center"
             >
                 {selectedOption ? selectedOption.label : placeholder}
                 <span className="ml-2">{open ? "▲" : "▼"}</span>

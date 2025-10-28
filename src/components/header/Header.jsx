@@ -9,6 +9,9 @@ import HeaderContent from "./HeaderContent";
 import ThemeToggle from "../common/ThemeToggle";
 import CustomModal from "../common/CustomModal";
 import Menu from "../common/Menu";
+import SidebarMenu from "../common/SidebarMenu";
+
+import { MenuIcon } from "lucide-react";
 
 const Header = ({ docName, setSearchInput, docId, status }) => {
   const { user, setUser } = useContext(AuthContext);
@@ -17,9 +20,12 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleMenuOpen = (e) => setMenuAnchor(e.currentTarget);
   const handleMenuClose = () => setMenuAnchor(null);
+  const toggleSidebar = () => setSidebarOpen((s) => !s);
+  const closeSidebar = () => setSidebarOpen(false);
 
   const logout = () => {
     setUser(null);
@@ -31,6 +37,14 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
   return (
     <>
       <header className="sticky top-0 z-40 bg-primary shadow-md min-w-full flex items-center justify-between py-4 px-8 dark:border-b-2">
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          aria-label="Toggle menu"
+          className="p-1 mr-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+        >
+          <MenuIcon size={20} strokeWidth={2} />
+        </button>
         <HeaderContent
           location={location}
           docName={docName}
@@ -48,6 +62,8 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
           />
         </div>
       </header>
+
+      <SidebarMenu isOpen={sidebarOpen} onClose={closeSidebar} />
 
       <Menu
         anchorEl={menuAnchor}

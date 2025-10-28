@@ -59,7 +59,7 @@ const DocsList = ({ searchInput, sortType, sortOrder = "asc", viewType }) => {
           : "flex flex-col divide-y"
       }
     >
-      {loading && <Loader />}
+      {loading && <Loader type="docs" />}
 
       {noResults && (
         <div className="w-full py-8 text-center text-gray-500">

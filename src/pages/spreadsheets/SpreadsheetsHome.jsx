@@ -1,0 +1,146 @@
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { firestore } from "../../firebase/firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+
+import { AuthContext } from "../../context/AuthContext";
+
+import Header from "../../components/header/Header";
+import SheetsList from "../../components/sheets/SheetsList";
+import Loader from "../../components/loader/Loader";
+import CustomModal from "../../components/common/CustomModal";
+import Dropdown from "../../components/common/Dropdown";
+
+import { sortOptions } from "../../utils/sortOptions";
+import { List, Table } from 'lucide-react';
+
+const Spreadsheets = () => {
+    const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [open, setOpen] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
+    const [viewType, setViewType] = useState("grid");
+    const [sortType, setSortType] = useState("date-newest");
+
+    const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    // 🟩 This is your adjusted create function for spreadsheets
+    const createSpreadsheet = async () => {
+        if (!input) return;
+        setInput("");
+        setOpen(false);
+
+        // Default sheet structure (empty 1x1 cell)
+        const defaultData = JSON.stringify([[""]]);
+
+        const sheetRef = await addDoc(
+            collection(firestore, "userSheets", `${user?.uid}`, "sheets"),
+            {
+                name: input,
+                time: serverTimestamp(),
+                content: defaultData,
+            }
+        );
+
+        navigate(`/sheet/${sheetRef?.id}`);
+    };
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setLoading(false);
+        }, 1500);
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, []);
+
+    if (loading) return <Loader type="sheets" />;
+    if (user === null) {
+        navigate("/login");
+        return null;
+    }
+
+    return (
+        <div>
+            <Header setSearchInput={setSearchInput} />
+            <section className="bg-primary pb-10 md:px-40 px-10">
+                <div className="max-w-screen mx-auto">
+                    <div className="py-6 flex flex-wrap items-center justify-between">
+                        <h2 className="text-primary text-xl">Last Spreadsheets:</h2>
+                        <div className="flex items-center gap-5">
+                            <button
+                                onClick={() => setViewType(viewType === "grid" ? "list" : "grid")}
+                                className="bg-green-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-green-600"
+                            >
+                                {viewType === "grid" ? <List /> : <Table />}
+                            </button>
+
+                            <Dropdown
+                                options={sortOptions}
+                                value={sortType}
+                                onChange={setSortType}
+                                placeholder="Sort by..."
+                                color="#22c55e"
+                            />
+
+                            <button
+                                onClick={handleOpen}
+                                className="bg-green-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-green-600"
+                            >
+                                Create New
+                            </button>
+                        </div>
+                    </div>
+
+                    <SheetsList
+                        viewType={viewType}
+                        searchInput={searchInput}
+                        sortType={sortType}
+                        sortOrder="desc"
+                    />
+                </div>
+            </section>
+
+            <CustomModal isOpen={open} onClose={handleClose} title="Create Spreadsheet">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        createSpreadsheet();
+                    }}
+                >
+                    <input
+                        type="text"
+                        className="p-2 w-full bg-secondary rounded-lg outline-none"
+                        placeholder="Enter spreadsheet name..."
+                        onChange={({ target }) => setInput(target.value)}
+                        value={input}
+                    />
+
+                    <div className="flex items-center justify-between gap-5 mt-5">
+                        <button
+                            type="submit"
+                            className="w-full bg-green-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-green-600"
+                        >
+                            Create
+                        </button>
+
+                        <button
+                            type="button"
+                            className="w-full bg-white text-green-500 px-6 py-2 rounded-xl hover:bg-gray-100"
+                            onClick={handleClose}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </CustomModal>
+        </div>
+    );
+};
+
+export default Spreadsheets;

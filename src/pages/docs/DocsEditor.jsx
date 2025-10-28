@@ -2,20 +2,20 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import RichTextEditor from 'reactjs-tiptap-editor';
 import { debounce } from 'lodash';
 
-import { extensions } from '../components/text-editor/Extensions';
+import { extensions } from '../../components/text-editor/Extensions';
 
-import { ThemeContext } from '../context/ThemeContext';
-import { AuthContext } from '../context/AuthContext';
+import { ThemeContext } from '../../context/ThemeContext';
+import { AuthContext } from '../../context/AuthContext';
 import { useParams } from 'react-router-dom';
 
-import { firestore } from '../firebase/firebase'
+import { firestore } from '../../firebase/firebase'
 import { doc, updateDoc, onSnapshot } from 'firebase/firestore'
 
 import { toast } from 'react-toastify'
-import Loader from '../components/loader/Loader'
-import Header from '../components/header/Header'
+import Loader from '../../components/loader/Loader'
+import Header from '../../components/header/Header'
 
-const Editor = () => {
+const DocsEditor = () => {
   const { user } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
   const { id } = useParams();
@@ -111,4 +111,4 @@ const Editor = () => {
   );
 };
 
-export default Editor;
+export default DocsEditor;
