@@ -8,6 +8,113 @@ import { useNavigate } from "react-router-dom";
 
 import Menu from "../common/Menu";
 import CustomModal from "../common/CustomModal";
+import styled from "styled-components";
+
+const GridContainer = styled.div`
+  border: 2px solid #22c55e;
+  width: fit-content;
+  border-radius: 0.125rem;
+  margin-bottom: 2.5rem;
+  &:hover {
+    border-color: #16a34a;
+  }
+`;
+
+const GridContent = styled.div`
+  position: relative;
+  height: 200px;
+  width: 230px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+`;
+
+const GridFooter = styled.div`
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+`;
+
+const NameText = styled.p`
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+`;
+
+const InfoRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const InfoLeft = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const DateText = styled.p`
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin-left: 0.75rem;
+`;
+
+const ListContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  cursor: pointer;
+  &:hover {
+    background-color: #f3f4f6;
+  }
+`;
+
+const ListLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const ListRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+  }
+`;
+
+const Button = styled.button`
+  background-color: ${(props) => props.bg || "white"};
+  color: ${(props) => props.color || "#22c55e"};
+  padding: 0.5rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  &:hover {
+    box-shadow: ${(props) => (props.hoverShadow ? "0 10px 20px rgba(0,0,0,0.2)" : "none")};
+    background-color: ${(props) => props.hoverBg || props.bg};
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const Input = styled.input`
+  padding: 0.5rem;
+  width: 100%;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  outline: none;
+`;
 
 const SheetItem = ({ id, name, date, viewType }) => {
     const navigate = useNavigate();
@@ -69,70 +176,49 @@ const SheetItem = ({ id, name, date, viewType }) => {
     return (
         <>
             {viewType === "grid" && (
-                <div className="border-2 border-green-500 hover:border-green-600 w-fit rounded-sm mb-10">
-                    <div
-                        onClick={navigateToSheet}
-                        className="relative h-[200px] w-[230px] cursor-pointer flex flex-col items-center justify-center bg-white"
-                    >
+                <GridContainer>
+                    <GridContent onClick={navigateToSheet}>
                         <FileSpreadsheet size={48} color="#22c55e" />
-                        <p className="text-sm text-gray-500 mt-3">
+                        <DateText>
                             {sheetContent?.length > 0 ? "Spreadsheet" : "Empty Sheet"}
-                        </p>
-                    </div>
-                    <div className="p-4 border-t flex flex-col">
-                        <p
-                            onClick={navigateToSheet}
-                            className="font-bold text-md text-primary cursor-pointer"
-                        >
-                            {name || "Untitled Sheet"}
-                        </p>
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <FileSpreadsheet style={{ color: "#22c55e" }} />
-                                <p className="text-sm text-gray-400 ml-3">
-                                    {date &&
-                                        date.toDate().toLocaleDateString("en-US", {
-                                            year: "numeric",
-                                            month: "short",
-                                            day: "numeric",
-                                        })}
-                                </p>
-                            </div>
-                            <EllipsisVertical
-                                className="cursor-pointer p-1"
-                                onClick={handleClick}
-                            />
-                        </div>
-                    </div>
-                </div>
+                        </DateText>
+                    </GridContent>
+                    <GridFooter>
+                        <NameText onClick={navigateToSheet}>{name || "Untitled Sheet"}</NameText>
+                        <InfoRow>
+                            <InfoLeft>
+                                <FileSpreadsheet color="#22c55e" />
+                                <DateText>
+                                    {date?.toDate().toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "numeric",
+                                    })}
+                                </DateText>
+                            </InfoLeft>
+                            <EllipsisVertical onClick={handleClick} style={{ cursor: "pointer", padding: "0.25rem" }} />
+                        </InfoRow>
+                    </GridFooter>
+                </GridContainer>
             )}
 
             {viewType === "list" && (
-                <div className="flex items-center justify-between p-4 border-b hover:bg-secondary cursor-pointer">
-                    <div className="flex items-center gap-4" onClick={navigateToSheet}>
-                        <FileSpreadsheet style={{ color: "#22c55e" }} />
-                        <p
-                            onClick={navigateToSheet}
-                            className="font-bold text-md text-primary cursor-pointer"
-                        >
-                            {name || "Untitled Sheet"}
-                        </p>
-                    </div>
-                    <div className="flex items-center md:gap-32 gap-10">
-                        <p className="text-sm text-gray-400 ml-3">
-                            {date &&
-                                date.toDate().toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                })}
-                        </p>
-                        <EllipsisVertical
-                            className="cursor-pointer p-1"
-                            onClick={handleClick}
-                        />
-                    </div>
-                </div>
+                <ListContainer>
+                    <ListLeft onClick={navigateToSheet}>
+                        <FileSpreadsheet color="#22c55e" />
+                        <NameText>{name || "Untitled Sheet"}</NameText>
+                    </ListLeft>
+                    <ListRight>
+                        <DateText>
+                            {date?.toDate().toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                            })}
+                        </DateText>
+                        <EllipsisVertical onClick={handleClick} style={{ cursor: "pointer", padding: "0.25rem" }} />
+                    </ListRight>
+                </ListContainer>
             )}
 
             <Menu
@@ -148,59 +234,41 @@ const SheetItem = ({ id, name, date, viewType }) => {
             />
 
             {/* Delete confirmation modal */}
-            <CustomModal
-                isOpen={deleteModalOpen}
-                onClose={handleDeleteModalClose}
-                title="Delete Spreadsheet"
-            >
-                <p className="font-light text-primary">
-                    Do you really want to delete this spreadsheet?
-                </p>
-                <div className="flex items-center justify-around mt-5">
-                    <button
-                        onClick={deleteSheet}
-                        className="bg-red-500 text-white px-8 py-2 rounded-xl hover:shadow-2xl hover:bg-red-600"
-                    >
+            <CustomModal isOpen={deleteModalOpen} onClose={handleDeleteModalClose} title="Delete Spreadsheet">
+                <p style={{ fontWeight: 300, color: "#1a73e8" }}>Do you really want to delete this spreadsheet?</p>
+                <div style={{ display: "flex", justifyContent: "space-around", marginTop: "1.25rem" }}>
+                    <Button bg="#ef4444" color="white" hoverBg="#dc2626" hoverShadow onClick={deleteSheet}>
                         Yes
-                    </button>
-                    <button
-                        className="bg-white text-green-500 px-8 py-2 rounded-xl hover:bg-gray-100"
-                        onClick={() => setDeleteModalOpen(false)}
-                    >
+                    </Button>
+                    <Button bg="white" color="#22c55e" hoverBg="#f3f4f6" onClick={handleDeleteModalClose}>
                         No
-                    </button>
+                    </Button>
                 </div>
             </CustomModal>
 
             {/* Rename modal */}
-            <CustomModal
-                isOpen={renameModalOpen}
-                onClose={handleRenameModalClose}
-                title="Rename Spreadsheet"
-            >
+            <CustomModal isOpen={renameModalOpen} onClose={handleRenameModalClose} title="Rename Spreadsheet">
                 <form onSubmit={(e) => e.preventDefault()}>
-                    <input
+                    <Input
                         type="text"
-                        className="p-2 w-full bg-secondary rounded-lg outline-none"
                         placeholder="Enter new spreadsheet name..."
                         onChange={handleNameChange}
                         value={newName}
                     />
-                    <div className="flex items-center justify-around mt-5">
-                        <button
-                            onClick={updateName}
-                            className={`bg-green-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-green-600 ${!newName && "opacity-50 cursor-not-allowed"
-                                }`}
+                    <div style={{ display: "flex", justifyContent: "space-around", marginTop: "1.25rem" }}>
+                        <Button
+                            bg="#22c55e"
+                            color="white"
+                            hoverBg="#16a34a"
+                            hoverShadow
                             disabled={!newName}
+                            onClick={updateName}
                         >
                             Update
-                        </button>
-                        <button
-                            className="bg-white text-green-500 px-6 py-2 rounded-xl hover:bg-gray-100"
-                            onClick={handleRenameModalClose}
-                        >
+                        </Button>
+                        <Button bg="white" color="#22c55e" hoverBg="#f3f4f6" onClick={handleRenameModalClose}>
                             Cancel
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </CustomModal>

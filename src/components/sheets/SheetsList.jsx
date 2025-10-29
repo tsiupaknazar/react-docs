@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
-
 import { collection, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
@@ -8,6 +7,26 @@ import SheetItem from "./SheetItem";
 import Loader from "../loader/Loader";
 
 import { sortDocs } from "../../utils/sortDocs";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  flex-wrap: ${(props) => (props.viewType === "grid" ? "wrap" : "nowrap")};
+  gap: ${(props) => (props.viewType === "grid" ? "1.5rem" : "0")};
+  justify-content: ${(props) => (props.viewType === "grid" ? "center" : "flex-start")};
+  flex-direction: ${(props) => (props.viewType === "list" ? "column" : "row")};
+  width: 100%;
+  /* background: var(--color-bg-primary); */
+  ${(props) => props.viewType === "list" && "border-top: 1px solid #e5e7eb;"}
+`;
+
+const NoResults = styled.div`
+  width: 100%;
+  padding: 2rem 0;
+  text-align: center;
+  color: #6b7280;
+`;
+
 const SheetsList = ({ searchInput, sortType, sortOrder = "asc", viewType }) => {
     const { user } = useContext(AuthContext);
 
@@ -50,20 +69,10 @@ const SheetsList = ({ searchInput, sortType, sortOrder = "asc", viewType }) => {
     const noResults = !loading && hasFetched && sortedSheets.length === 0;
 
     return (
-        <div
-            className={
-                viewType === "grid"
-                    ? "flex flex-wrap gap-6 sm:justify-normal justify-center"
-                    : "flex flex-col divide-y"
-            }
-        >
+        <Container viewType={viewType}>
             {loading && <Loader type="sheets" />}
 
-            {noResults && (
-                <div className="w-full py-8 text-center text-gray-500">
-                    No spreadsheets found
-                </div>
-            )}
+            {noResults && <NoResults>No spreadsheets found</NoResults>}
 
             {!loading &&
                 sortedSheets.map((sheet) => (
@@ -75,7 +84,7 @@ const SheetsList = ({ searchInput, sortType, sortOrder = "asc", viewType }) => {
                         viewType={viewType}
                     />
                 ))}
-        </div>
+        </Container>
     );
 };
 

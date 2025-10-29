@@ -1,28 +1,54 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
 
-const CustomMenu = ({
-    anchorEl,
-    open,
-    onClose,
-    options = [],
-    offsetX = 0,
-    offsetY = 8,
-}) => {
+const MenuContainer = styled.div`
+  position: absolute;
+  z-index: 50;
+  min-width: 180px;
+  border-radius: 12px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 6px 0;
+  overflow: hidden;
+`;
+
+const MenuItem = styled.button`
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  color: ${(p) => (p.danger ? "var(--danger-color, #dc2626)" : "var(--color-text-secondary)")};
+  cursor: pointer;
+
+  &:hover {
+    background: ${(p) => (p.danger ? "rgba(220,38,38,0.08)" : "var(--color-doc-hover)")};
+    color: #fff;
+  }
+
+  &:focus {
+    outline: 2px solid rgba(59,130,246,0.12);
+    outline-offset: 2px;
+  }
+`;
+
+const CustomMenu = ({ anchorEl, open, onClose, options = [], offsetX = 0, offsetY = 8 }) => {
     const menuRef = useRef(null);
 
     useEffect(() => {
+        if (!open) return;
+
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 onClose();
             }
         };
 
-        if (open) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-
+        document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [open, onClose]);
 
@@ -37,27 +63,21 @@ const CustomMenu = ({
         : {};
 
     return (
-        <div
-            ref={menuRef}
-            className="absolute z-50 min-w-[180px] rounded-lg bg-primary shadow-lg border py-2"
-            style={styles}
-        >
+        <MenuContainer ref={menuRef} style={styles} role="menu" aria-hidden={!open}>
             {options.map((option, idx) => (
-                <button
+                <MenuItem
                     key={idx}
                     onClick={() => {
-                        option.onClick();
-                        onClose();
+                        option.onClick && option.onClick();
+                        onClose && onClose();
                     }}
-                    className={`block w-full text-left px-4 py-2 text-sm ${option.danger
-                            ? "text-red-600 hover:bg-red-200"
-                            : "text-secondary hover:bg-secondary"
-                        }`}
+                    danger={option.danger}
+                    role="menuitem"
                 >
                     {option.label}
-                </button>
+                </MenuItem>
             ))}
-        </div>
+        </MenuContainer>
     );
 };
 

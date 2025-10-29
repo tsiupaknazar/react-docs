@@ -10,14 +10,15 @@ const ThemeToggle = () => {
   };
 
   return (
-    <div className="p-3">
+    <div style={{ padding: "0.75rem" }}>
       <div
         onClick={toggleTheme}
+        style={{ cursor: "pointer" }}
       >
         {theme === "dark" ? (
-          <Sun className="text-3xl text-primary" />
+          <Sun style={{ fontSize: "1.8rem", color: "var(--color-text-primary)" }} />
         ) : (
-          <Moon className="text-3xl text-primary" />
+          <Moon style={{ fontSize: "1.8rem", color: "var(--color-text-primary)" }} />
         )}
       </div>
     </div>

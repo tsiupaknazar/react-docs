@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FileText, FileSpreadsheet } from 'lucide-react';
+import { FileText, FileSpreadsheet } from "lucide-react";
 import Search from "./Search";
 import { doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
@@ -8,13 +8,45 @@ import { AuthContext } from "../../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import CustomToast from "../common/CustomToast";
 import { ThemeContext } from "../../context/ThemeContext";
+import styled from "styled-components";
 
-const HeaderContent = ({
-  location,
-  docName,
-  handleSearchChange,
-  docId
-}) => {
+const HeaderWrapper = styled.div`
+  background-color: var(--color-bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const LeftSection = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  margin-left: 0.5rem;
+  color: var(--color-text-primary);
+  font-size: 1.5rem;
+  display: none;
+
+  @media(min-width: 768px) {
+    display: inline-flex;
+  }
+
+  cursor: ${(props) => (props.editable ? "pointer" : "default")};
+`;
+
+const EditableInput = styled.input`
+  margin-left: 0.5rem;
+  font-size: 1.5rem;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-text-primary);
+  outline: none;
+`;
+
+const HeaderContent = ({ location, docName, handleSearchChange, docId }) => {
   const { user } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
 
@@ -25,14 +57,12 @@ const HeaderContent = ({
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState(docName);
 
-
   const updateName = async (name) => {
     if (!docRef) return;
     try {
       await updateDoc(docRef, { name });
     } catch (error) {
       console.error("Error updating document: ", error);
-      // toast.error("Error updating document name");
       toast(<CustomToast title="Error" message="Error updating document name" />);
     }
   };
@@ -58,49 +88,43 @@ const HeaderContent = ({
   };
 
   return (
-    <div className="flex items-center justify-between w-full">
-      <div className="flex items-center justify-center">
+    <HeaderWrapper>
+      <LeftSection>
         {location.pathname === "/" || location.pathname.includes("doc") ? (
           <Link to="/">
-            <FileText size={40} className="cursor-pointer" color="#4385F3" />
+            <FileText size={40} style={{ cursor: "pointer", color: "#4385F3" }} />
           </Link>
         ) : (
           <Link to="/spreadsheets">
-            <FileSpreadsheet className="cursor-pointer" size={40} color="#2bff00" />
+            <FileSpreadsheet size={40} style={{ cursor: "pointer", color: "#2bff00" }} />
           </Link>
         )}
+
         {location.pathname === "/" ? (
-          <h1 className="ml-2 text-primary text-2xl hidden md:inline-flex">Docs</h1>
+          <Title>Docs</Title>
         ) : location.pathname === "/spreadsheets" ? (
-          <h1 className="ml-2 text-primary text-2xl hidden md:inline-flex">Sheets</h1>
+          <Title>Sheets</Title>
         ) : editing ? (
-          <input
-            className="ml-2 text-primary text-2xl border-b outline-none bg-transparent"
+          <EditableInput
             value={newName}
             autoFocus
-            onChange={e => setNewName(e.target.value)}
+            onChange={(e) => setNewName(e.target.value)}
             onBlur={handleInputBlur}
             onKeyDown={handleInputKeyDown}
           />
         ) : (
-          <h1
-            className="ml-2 text-primary text-2xl md:inline-flex"
-            onDoubleClick={handleDoubleClick}
-            title="Double-click to rename"
-          >
+          <Title editable onDoubleClick={handleDoubleClick} title="Double-click to rename">
             {docName || null}
-          </h1>
+          </Title>
         )}
-      </div>
-      {location.pathname === "/" || location.pathname === "/spreadsheets" && (
+      </LeftSection>
+
+      {(location.pathname === "/" || location.pathname === "/spreadsheets") && (
         <Search handleSearchChange={handleSearchChange} />
       )}
-      <ToastContainer
-        hideProgressBar={true}
-        closeOnClick
-        theme={theme}
-      />
-    </div>
+
+      <ToastContainer hideProgressBar={true} closeOnClick theme={theme} />
+    </HeaderWrapper>
   );
 };
 

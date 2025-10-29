@@ -12,7 +12,79 @@ import CustomModal from "../../components/common/CustomModal";
 import Dropdown from "../../components/common/Dropdown";
 
 import { sortOptions } from "../../utils/sortOptions";
-import { List, Table } from 'lucide-react';
+import { List, Table } from "lucide-react";
+import styled from "styled-components";
+
+const Section = styled.section`
+  background-color: var(--color-bg-primary); /* bg-primary */
+  padding-bottom: 2.5rem;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  min-height: 100%;
+  height: 100%;
+
+  @media(min-width: 768px) {
+    padding-left: 10rem;
+    padding-right: 10rem;
+  }
+`;
+
+const Container = styled.div`
+  max-width: 100%;
+  margin: 0 auto;
+`;
+
+const HeaderRow = styled.div`
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Title = styled.h2`
+  color: var(--color-text-primary);
+  font-size: 1.25rem;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+`;
+
+const Button = styled.button`
+  background-color: ${(props) => props.bg || "#22c55e"};
+  color: ${(props) => props.color || "white"};
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background-color: ${(props) => props.hoverBg || "#16a34a"};
+  }
+`;
+
+const ModalInput = styled.input`
+  padding: 0.5rem;
+  width: 100%;
+  background-color: #f3f4f6; /* bg-secondary */
+  border-radius: 0.5rem;
+  outline: none;
+`;
+
+const ModalButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+`;
 
 const Spreadsheets = () => {
     const [input, setInput] = useState("");
@@ -28,13 +100,11 @@ const Spreadsheets = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    // 🟩 This is your adjusted create function for spreadsheets
     const createSpreadsheet = async () => {
         if (!input) return;
         setInput("");
         setOpen(false);
 
-        // Default sheet structure (empty 1x1 cell)
         const defaultData = JSON.stringify([[""]]);
 
         const sheetRef = await addDoc(
@@ -54,9 +124,7 @@ const Spreadsheets = () => {
             setLoading(false);
         }, 1500);
 
-        return () => {
-            clearTimeout(timeoutId);
-        };
+        return () => clearTimeout(timeoutId);
     }, []);
 
     if (loading) return <Loader type="sheets" />;
@@ -68,17 +136,20 @@ const Spreadsheets = () => {
     return (
         <div>
             <Header setSearchInput={setSearchInput} />
-            <section className="bg-primary pb-10 md:px-40 px-10">
-                <div className="max-w-screen mx-auto">
-                    <div className="py-6 flex flex-wrap items-center justify-between">
-                        <h2 className="text-primary text-xl">Last Spreadsheets:</h2>
-                        <div className="flex items-center gap-5">
-                            <button
+
+            <Section>
+                <Container>
+                    <HeaderRow>
+                        <Title>Last Spreadsheets:</Title>
+
+                        <Actions>
+                            <Button
                                 onClick={() => setViewType(viewType === "grid" ? "list" : "grid")}
-                                className="bg-green-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-green-600"
+                                bg="#22c55e"
+                                hoverBg="#16a34a"
                             >
                                 {viewType === "grid" ? <List /> : <Table />}
-                            </button>
+                            </Button>
 
                             <Dropdown
                                 options={sortOptions}
@@ -88,14 +159,11 @@ const Spreadsheets = () => {
                                 color="#22c55e"
                             />
 
-                            <button
-                                onClick={handleOpen}
-                                className="bg-green-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-green-600"
-                            >
+                            <Button onClick={handleOpen} bg="#22c55e" hoverBg="#16a34a">
                                 Create New
-                            </button>
-                        </div>
-                    </div>
+                            </Button>
+                        </Actions>
+                    </HeaderRow>
 
                     <SheetsList
                         viewType={viewType}
@@ -103,8 +171,8 @@ const Spreadsheets = () => {
                         sortType={sortType}
                         sortOrder="desc"
                     />
-                </div>
-            </section>
+                </Container>
+            </Section>
 
             <CustomModal isOpen={open} onClose={handleClose} title="Create Spreadsheet">
                 <form
@@ -113,30 +181,22 @@ const Spreadsheets = () => {
                         createSpreadsheet();
                     }}
                 >
-                    <input
+                    <ModalInput
                         type="text"
-                        className="p-2 w-full bg-secondary rounded-lg outline-none"
                         placeholder="Enter spreadsheet name..."
                         onChange={({ target }) => setInput(target.value)}
                         value={input}
                     />
 
-                    <div className="flex items-center justify-between gap-5 mt-5">
-                        <button
-                            type="submit"
-                            className="w-full bg-green-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-green-600"
-                        >
+                    <ModalButtons>
+                        <Button type="submit" bg="#22c55e" hoverBg="#16a34a">
                             Create
-                        </button>
+                        </Button>
 
-                        <button
-                            type="button"
-                            className="w-full bg-white text-green-500 px-6 py-2 rounded-xl hover:bg-gray-100"
-                            onClick={handleClose}
-                        >
+                        <Button type="button" bg="white" color="#22c55e" hoverBg="#f3f4f6" onClick={handleClose}>
                             Cancel
-                        </button>
-                    </div>
+                        </Button>
+                    </ModalButtons>
                 </form>
             </CustomModal>
         </div>

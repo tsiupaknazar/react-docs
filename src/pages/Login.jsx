@@ -10,6 +10,65 @@ import { auth, firestore } from "../firebase/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { FileText } from "lucide-react";
 import Loader from "../components/loader/Loader";
+import styled from "styled-components";
+
+const Page = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-primary, #fff);
+  color: var(--color-text-primary, #111827);
+  padding: 2rem;
+`;
+
+const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+  text-align: center;
+`;
+
+const BrandIcon = styled.div`
+  display: block;
+`;
+
+const Title = styled.h1`
+  font-weight: 700;
+  font-size: 3rem;
+  margin: 0;
+  color: inherit;
+`;
+
+const LoginButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-bg-button, #2563EB);
+  color: var(--btn-text, #fff);
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(2,6,23,0.08);
+  transition: transform 120ms ease, filter 120ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(0.98);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus {
+    outline: 3px solid rgba(59,130,246,0.16);
+    outline-offset: 2px;
+  }
+`;
 
 const Login = () => {
   const { setUser } = useContext(AuthContext);
@@ -44,22 +103,25 @@ const Login = () => {
         setUser(user);
       })
       .catch((err) => console.log(err))
-      .finally(() => setLoading(false)); // Set loading to false when login is completed (success or error)
+      .finally(() => setLoading(false));
   };
 
   return (
     <>
       {loading && <Loader type="docs" />}
-      <div className="flex flex-col items-center justify-center h-100 min-h-screen">
-        <FileText size={200} color="#4385F3" />
-        <h1 className="font-bold text-5xl mb-5">React Docs</h1>
-        <button
-          className="bg-blue-500 text-white px-10 py-2 rounded-lg hover:shadow-2xl hover:bg-blue-600 flex items-center justify-between"
-          onClick={login}
-        >
-          <span className="ml-2">Login with Google</span>
-        </button>
-      </div>
+      <Page>
+        <Card>
+          <BrandIcon>
+            <FileText size={200} color="#4385F3" aria-hidden />
+          </BrandIcon>
+
+          <Title>React Docs</Title>
+
+          <LoginButton onClick={login} aria-label="Login with Google">
+            <span>Login with Google</span>
+          </LoginButton>
+        </Card>
+      </Page>
     </>
   );
 };

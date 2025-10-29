@@ -1,9 +1,34 @@
+import styled from "styled-components";
+
+const ToastWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+  border-radius: 8px;
+  min-width: 240px;
+`;
+
+const Title = styled.span`
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+`;
+
+const Message = styled.span`
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+`;
+
 function CustomToast({ title, message }) {
     return (
-        <div className="p-4 text-primary bg-primary shadow-lg">
-            <span className="font-bold text-[var(--color-text-primary)]">{title}</span>
-            <span className="text-sm text-[var(--color-text-secondary)]">{message}</span>
-        </div>
+        <ToastWrapper role="status" aria-live="polite">
+            {title && <Title>{title}</Title>}
+            {message && <Message>{message}</Message>}
+        </ToastWrapper>
     );
 }
 

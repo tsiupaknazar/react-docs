@@ -1,28 +1,80 @@
+import styled from "styled-components";
 import { Link } from "react-router-dom";
+
+const Page = styled.section`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  margin: 2rem 0;
+  max-width: 40rem;
+  text-align: center;
+`;
+
+const CodeRow = styled.h2`
+  margin: 0 0 1rem 0;
+  font-weight: 800;
+  font-size: 6rem;
+  line-height: 1;
+  color: #4385F3;
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const Digit = styled.span`
+  cursor: pointer;
+  transition: color 160ms ease;
+  &:hover {
+    color: #2563eb;
+  }
+`;
+
+const Message = styled.p`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: var(--color-text-primary);
+`;
+
+const BackButton = styled(Link)`
+  padding: 0.6rem 1.5rem;
+  border-radius: 0.5rem;
+  background: #2563eb;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 120ms ease;
+  &:hover {
+    background: #1e40af;
+  }
+`;
 
 const NotFound = () => {
   return (
-    <section className="flex flex-col items-center max-h-screen p-16">
-      <div className="container flex flex-col items-center justify-center px-5 mx-auto my-8">
-        <div className="max-w-md text-center">
-          <h2 className="mb-8 font-extrabold text-9xl text-[#4385F3]">
-            <span className="sr-only">Error</span>
-            <span className="cursor-pointer transition hover:text-blue-600">4</span>
-            <span className="cursor-pointer transition hover:text-blue-600">0</span>
-            <span className="cursor-pointer transition hover:text-blue-600">4</span>
-          </h2>
-          <p className="text-2xl font-semibold md:text-3xl text-primary">
-            Sorry, we couldn&apos;t find this page.
-          </p>
-        </div>
-      </div>
-      <Link
-        to="/"
-        className="px-8 py-3 font-semibold rounded bg-blue-500 text-white transition delay-75 hover:bg-blue-600"
-      >
-        Back to home
-      </Link>
-    </section>
+    <Page>
+      <Container>
+        <CodeRow aria-hidden>
+          <Digit>4</Digit>
+          <Digit>0</Digit>
+          <Digit>4</Digit>
+        </CodeRow>
+
+        <Message>Sorry, we couldn't find this page.</Message>
+
+        <BackButton to="/">Back to home</BackButton>
+      </Container>
+    </Page>
   );
 };
 

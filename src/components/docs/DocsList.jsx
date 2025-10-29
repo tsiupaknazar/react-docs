@@ -8,6 +8,21 @@ import DocItem from "./DocItem";
 import Loader from "../loader/Loader";
 
 import { sortDocs } from "../../utils/sortDocs";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: ${(p) => (p.viewType === "grid" ? "flex" : "block")};
+  flex-wrap: ${(p) => (p.viewType === "grid" ? "wrap" : "nowrap")};
+  gap: ${(p) => (p.viewType === "grid" ? "1.5rem" : "0")};
+  justify-content: ${(p) => (p.viewType === "grid" ? "flex-start" : "stretch")};
+`;
+
+const Empty = styled.div`
+  width: 100%;
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--color-text-secondary);
+`;
 
 const DocsList = ({ searchInput, sortType, sortOrder = "asc", viewType }) => {
   const { user } = useContext(AuthContext);
@@ -52,20 +67,10 @@ const DocsList = ({ searchInput, sortType, sortOrder = "asc", viewType }) => {
   const noResults = !loading && hasFetched && sortedDocs.length === 0;
 
   return (
-    <div
-      className={
-        viewType === "grid"
-          ? "flex flex-wrap gap-6 sm:justify-normal justify-center"
-          : "flex flex-col divide-y"
-      }
-    >
-      {loading && <Loader type="docs" />}
+    <Container viewType={viewType}>
+      {loading && <Loader />}
 
-      {noResults && (
-        <div className="w-full py-8 text-center text-gray-500">
-          No docs found
-        </div>
-      )}
+      {noResults && <Empty>No docs found</Empty>}
 
       {!loading &&
         sortedDocs.map((doc) => (
@@ -77,7 +82,7 @@ const DocsList = ({ searchInput, sortType, sortOrder = "asc", viewType }) => {
             viewType={viewType}
           />
         ))}
-    </div>
+    </Container>
   );
 };
 

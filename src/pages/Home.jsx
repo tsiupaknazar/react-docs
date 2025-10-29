@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { firestore } from "../firebase/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import styled from "styled-components";
 
 import { AuthContext } from "../context/AuthContext";
 
@@ -13,9 +14,123 @@ import Dropdown from "../components/common/Dropdown";
 
 import { sortOptions } from "../utils/sortOptions";
 
-import { List, Table } from 'lucide-react';
+import { List, Table } from "lucide-react";
 
 import { templates } from "../utils/templates";
+
+const Page = styled.div`
+  background: var(--color-bg-primary);
+  min-height: 100vh;
+`;
+
+const Section = styled.section`
+  padding-bottom: 2.5rem;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+
+  @media (min-width: 768px) {
+    padding-left: 10rem;
+    padding-right: 10rem;
+  }
+`;
+
+const Inner = styled.div`
+  max-width: 100%;
+  margin: 0 auto;
+`;
+
+const HeaderRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+`;
+
+const Title = styled.h2`
+  color: var(--color-text-primary);
+  font-size: 1.125rem;
+  margin: 0;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+`;
+
+const IconButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-button);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  gap: 0.5rem;
+  font-weight: 600;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+`;
+
+const PrimaryButton = styled.button`
+  background: var(--color-bg-button);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+`;
+
+const ModalButtons = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+`;
+
+const CancelButton = styled.button`
+  background: transparent;
+  color: var(--color-text-accent);
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0,0,0,0.06);
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0,0,0,0.03);
+  }
+`;
+
+const TextInput = styled.input`
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0,0,0,0.04);
+  color: var(--color-text-primary);
+  outline: none;
+`;
+
+const Select = styled.select`
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0,0,0,0.04);
+  outline: none;
+`;
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -23,9 +138,7 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [viewType, setViewType] = useState("grid");
-
   const [sortType, setSortType] = useState("date-newest");
-
   const [selectedTemplate, setSelectedTemplate] = useState(templates[0].id);
 
   const navigate = useNavigate();
@@ -39,7 +152,7 @@ const Home = () => {
     setInput("");
     setOpen(false);
 
-    const chosenTemplate = templates.find(t => t.id === selectedTemplate);
+    const chosenTemplate = templates.find((t) => t.id === selectedTemplate);
 
     const docRef = await addDoc(
       collection(firestore, "userDocs", `${user?.uid}`, "docs"),
@@ -72,38 +185,38 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <Page>
       <Header setSearchInput={setSearchInput} />
-      <section className="bg-primary pb-10 md:px-40 px-10">
-        <div className="max-w-screen mx-auto">
-          <div className="py-6 flex flex-wrap items-center justify-between">
-            <h2 className="text-primary text-xl">Last Documents:</h2>
-            <div className="flex items-center gap-5">
-              <button
-                onClick={() => setViewType(viewType === "grid" ? "list" : "grid")}
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-blue-600"
+      <Section>
+        <Inner>
+          <HeaderRow>
+            <Title>Last Documents:</Title>
+
+            <Actions>
+              <IconButton
+                onClick={() => setViewType((vt) => (vt === "grid" ? "list" : "grid"))}
+                aria-label="Toggle view"
+                title="Toggle view"
               >
                 {viewType === "grid" ? <List /> : <Table />}
-              </button>
+              </IconButton>
+
               <Dropdown
                 options={sortOptions}
                 value={sortType}
                 onChange={setSortType}
-                placeholder="Sort by..." 
-                color="#3b82f6"
-                />
+                placeholder="Sort by..."
+                color="var(--color-bg-button)"
+              />
 
-              <button
-                onClick={handleOpen}
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:shadow-2xl hover:bg-blue-600"
-              >
-                Create New
-              </button>
-            </div>
-          </div>
+              <PrimaryButton onClick={handleOpen}>Create New</PrimaryButton>
+            </Actions>
+          </HeaderRow>
+
           <DocsList viewType={viewType} searchInput={searchInput} sortType={sortType} sortOrder="desc" />
-        </div>
-      </section>
+        </Inner>
+      </Section>
+
       <CustomModal isOpen={open} onClose={handleClose} title="Create Document">
         <form
           onSubmit={(e) => {
@@ -111,44 +224,31 @@ const Home = () => {
             createDoc();
           }}
         >
-          <input
+          <TextInput
             type="text"
-            className="p-2 w-full bg-secondary rounded-lg outline-none"
             placeholder="Enter doc name..."
             onChange={({ target }) => setInput(target.value)}
             value={input}
           />
-          <select
-            className="mt-3 p-2 w-full bg-secondary text-primary rounded-lg"
-            value={selectedTemplate}
-            onChange={(e) => setSelectedTemplate(e.target.value)}
-          >
+
+          <Select value={selectedTemplate} onChange={(e) => setSelectedTemplate(e.target.value)}>
             {templates.map((tpl) => (
               <option key={tpl.id} value={tpl.id}>
                 {tpl.name}
               </option>
             ))}
-          </select>
-          <div className="flex items-center justify-between gap-5 mt-5">
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-blue-600"
-            >
-              Create
-            </button>
+          </Select>
 
-            <button
-              type="button"
-              className="w-full bg-white text-blue-500 px-6 py-2 rounded-xl hover:bg-gray-100"
-              onClick={handleClose}
-            >
+          <ModalButtons>
+            <PrimaryButton type="submit">Create</PrimaryButton>
+
+            <CancelButton type="button" onClick={handleClose}>
               Cancel
-            </button>
-          </div>
+            </CancelButton>
+          </ModalButtons>
         </form>
       </CustomModal>
-
-    </div>
+    </Page>
   );
 };
 

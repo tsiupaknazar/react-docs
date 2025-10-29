@@ -1,21 +1,79 @@
+import React, { useEffect } from "react";
+import styled from "styled-components";
+
+const Backdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+`;
+
+const ModalWrapper = styled.div`
+  width: 400px;
+  max-width: 94%;
+  padding: 24px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
+  border-radius: 12px;
+  position: relative;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+`;
+
+const Title = styled.h2`
+  margin: 0 0 12px 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+`;
+
+const Content = styled.div`
+  margin-top: 8px;
+`;
+
 const CustomModal = ({ isOpen, onClose, title, children }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose?.();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-[400px] p-6 bg-primary shadow-lg rounded-xl relative">
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-        >
+    <Backdrop role="dialog" aria-modal="true" aria-label={title || "Modal"}>
+      <ModalWrapper>
+        <CloseButton aria-label="Close" onClick={onClose}>
           ✕
-        </button>
+        </CloseButton>
 
-        <h2 className="text-xl text-primary font-bold mb-4">{title}</h2>
+        {title && <Title>{title}</Title>}
 
-        {children}
-      </div>
-    </div>
+        <Content>{children}</Content>
+      </ModalWrapper>
+    </Backdrop>
   );
 };
 

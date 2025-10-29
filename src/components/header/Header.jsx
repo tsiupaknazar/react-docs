@@ -1,4 +1,4 @@
-// import { MenuItem, Menu, Divider, Modal, Box } from "@mui/material";
+import styled from "styled-components";
 import { signOut } from "firebase/auth";
 import { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -12,6 +12,73 @@ import Menu from "../common/Menu";
 import SidebarMenu from "../common/SidebarMenu";
 
 import { MenuIcon } from "lucide-react";
+
+const HeaderWrapper = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 1rem 2rem;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+
+  @media (prefers-color-scheme: dark) {
+    border-bottom-color: rgba(255,255,255,0.04);
+  }
+`;
+
+const LeftControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const MenuButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  margin-right: 8px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+
+  &:hover {
+    background: rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:hover { background: rgba(255,255,255,0.03); }
+  }
+`;
+
+const RightControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 18px;
+`;
+
+const Status = styled.span`
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-right: 6px;
+  min-width: 120px;
+`;
+
+const Avatar = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  cursor: pointer;
+  object-fit: cover;
+`;
 
 const Header = ({ docName, setSearchInput, docId, status }) => {
   const { user, setUser } = useContext(AuthContext);
@@ -36,32 +103,36 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-primary shadow-md min-w-full flex items-center justify-between py-4 px-8 dark:border-b-2">
-        <button
-          type="button"
-          onClick={toggleSidebar}
-          aria-label="Toggle menu"
-          className="p-1 mr-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          <MenuIcon size={20} strokeWidth={2} />
-        </button>
-        <HeaderContent
-          location={location}
-          docName={docName}
-          handleSearchChange={handleSearchChange}
-          docId={docId}
-        />
-        <div className="flex items-center justify-between">
-          {status && <span className="flex-1 w-full text-sm text-secondary">{status}</span>}
+      <HeaderWrapper>
+        <LeftControls>
+          <MenuButton
+            type="button"
+            onClick={toggleSidebar}
+            aria-label="Toggle menu"
+            title="Toggle menu"
+          >
+            <MenuIcon size={20} strokeWidth={2} />
+          </MenuButton>
+
+          <HeaderContent
+            location={location}
+            docName={docName}
+            handleSearchChange={handleSearchChange}
+            docId={docId}
+          />
+        </LeftControls>
+
+        <RightControls>
+          {status && <Status>{status}</Status>}
           <ThemeToggle />
-          <img
-            src={'/default-avatar.png'}
+          <Avatar
+            src="/default-avatar.png"
             title={user?.displayName}
-            className="cursor-pointer h-8 w-8 rounded-full ml-2"
+            alt={user?.displayName || "avatar"}
             onClick={handleMenuOpen}
           />
-        </div>
-      </header>
+        </RightControls>
+      </HeaderWrapper>
 
       <SidebarMenu isOpen={sidebarOpen} onClose={closeSidebar} />
 
@@ -74,7 +145,7 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
             label: (
               <div>
                 {user?.displayName} <br />
-                <span className="text-xs">{user?.email}</span>
+                <span style={{ fontSize: 12 }}>{user?.email}</span>
               </div>
             ),
             onClick: handleMenuClose,
@@ -85,24 +156,35 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
         offsetY={8}
       />
 
-
-      <CustomModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Logout"
-      >
-        <p className="font-light">Do you really want to exit?</p>
-        <div className="flex items-center justify-between gap-5 mt-5">
+      <CustomModal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Logout">
+        <p style={{ fontWeight: 300 }}>Do you really want to exit?</p>
+        <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
           <button
             onClick={logout}
-            className="w-full bg-red-500 text-primary px-8 py-2 rounded-xl hover:shadow-2xl hover:bg-red-600"
+            style={{
+              flex: 1,
+              background: "#ef4444",
+              color: "white",
+              padding: "10px 16px",
+              borderRadius: 12,
+              border: "none",
+              cursor: "pointer",
+            }}
           >
             Yes
           </button>
           <button
             type="button"
             onClick={() => setModalOpen(false)}
-            className="w-full bg-secondary text-blue-500 px-8 py-2 rounded-xl hover:bg-primary"
+            style={{
+              flex: 1,
+              background: "transparent",
+              color: "var(--color-text-accent)",
+              padding: "10px 16px",
+              borderRadius: 12,
+              border: "1px solid rgba(0,0,0,0.06)",
+              cursor: "pointer",
+            }}
           >
             No
           </button>

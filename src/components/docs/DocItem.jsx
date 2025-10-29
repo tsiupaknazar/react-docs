@@ -3,12 +3,102 @@ import { AuthContext } from "../../context/AuthContext";
 import { doc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
-import { FileText, EllipsisVertical } from 'lucide-react';
+import { FileText, EllipsisVertical } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Menu from "../common/Menu";
 import CustomModal from "../common/CustomModal";
 import DocPreview from "./DocPreview";
+import styled from "styled-components";
+
+const GridCard = styled.div`
+  border: 2px solid var(--color-doc);
+  &:hover { border-color: var(--color-doc-hover); }
+  width: fit-content;
+  border-radius: 0.25rem;
+  margin-bottom: 2.5rem;
+  background: transparent;
+`;
+
+const GridPreviewWrapper = styled.div`
+  position: relative;
+  height: 290px;
+  width: 230px;
+  cursor: pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+`;
+
+const CardFooter = styled.div`
+  padding: 1rem;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const Title = styled.p`
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  margin: 0;
+  cursor: pointer;
+`;
+
+const MetaRow = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 0.5rem;
+`;
+
+const MetaLeft = styled.div`
+  display:flex;
+  align-items:center;
+  gap: 0.75rem;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+`;
+
+const ListRow = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  &:hover { background: var(--color-bg-secondary); cursor: pointer; }
+`;
+
+const ListLeft = styled.div`
+  display:flex;
+  align-items:center;
+  gap: 1rem;
+`;
+
+const IconButton = styled.div`
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+`;
+
+const Input = styled.input`
+  padding: 0.5rem;
+  width: 100%;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0,0,0,0.04);
+  color: var(--color-text-primary);
+`;
+
+const ActionButton = styled.button`
+  background: ${(p) => (p.danger ? "#ef4444" : "white")};
+  color: ${(p) => (p.danger ? "white" : "var(--color-text-accent)")};
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  border: ${(p) => (p.danger ? "none" : "1px solid rgba(0,0,0,0.06)")};
+  cursor: pointer;
+`;
 
 const DocItem = ({ id, name, date, viewType }) => {
   const navigate = useNavigate();
@@ -32,9 +122,7 @@ const DocItem = ({ id, name, date, viewType }) => {
   };
   const handleRenameModalClose = () => setRenameModalOpen(false);
 
-  const handleNameChange = (e) => {
-    setNewName(e.target.value);
-  };
+  const handleNameChange = (e) => setNewName(e.target.value);
 
   const deleteDocument = async () => {
     try {
@@ -47,7 +135,6 @@ const DocItem = ({ id, name, date, viewType }) => {
   const updateName = async () => {
     try {
       await updateDoc(docRef, { name: newName });
-      console.log("Document successfully updated!");
       handleRenameModalClose();
     } catch (error) {
       console.error("Error updating document: ", error);
@@ -61,74 +148,58 @@ const DocItem = ({ id, name, date, viewType }) => {
         if (docSnap.exists()) {
           const content = docSnap.data().content;
           setFileContent(content);
-        } else {
-          console.log("Document does not exist");
         }
       } catch (error) {
         console.log(error);
       }
     };
 
-    getDocContent();
+    if (user?.uid) getDocContent();
   }, [id, user?.uid]);
 
-  const navigateToDoc = () => {
-    navigate(`/doc/${id}`);
-  };
+  const navigateToDoc = () => navigate(`/doc/${id}`);
 
   return (
     <>
       {viewType === "grid" && (
-        <div className="border-2 border-doc hover:border-docHover w-fit rounded-sm mb-10">
-          <div
-            onClick={navigateToDoc}
-            className="relative h-[290px] w-[230px] cursor-pointer flex items-center justify-center"
-          >
+        <GridCard>
+          <GridPreviewWrapper onClick={navigateToDoc}>
             <DocPreview content={fileContent} />
-          </div>
-          <div className="p-4 border-t flex flex-col">
-            <p
-              onClick={navigateToDoc}
-              className="font-bold text-md text-primary cursor-pointer"
-            >
-              {name || "Filename"}
-            </p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+          </GridPreviewWrapper>
+
+          <CardFooter>
+            <Title onClick={navigateToDoc}>{name || "Filename"}</Title>
+            <MetaRow>
+              <MetaLeft>
                 <FileText style={{ color: "#1A73E8" }} />
-                <p className="text-sm text-gray-400 ml-3">
+                <span>
                   {date && date.toDate().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-                </p>
-              </div>
-              <EllipsisVertical
-                className="cursor-pointer p-1"
-                onClick={handleClick}
-              />
-            </div>
-          </div>
-        </div>
+                </span>
+              </MetaLeft>
+              <IconButton onClick={handleClick}>
+                <EllipsisVertical />
+              </IconButton>
+            </MetaRow>
+          </CardFooter>
+        </GridCard>
       )}
+
       {viewType === "list" && (
-        <div className="flex items-center justify-between p-4 border-b hover:bg-secondary cursor-pointer">
-          <div className="flex items-center gap-4" onClick={navigateToDoc}>
+        <ListRow onClick={navigateToDoc}>
+          <ListLeft>
             <FileText style={{ color: "#1A73E8" }} />
-            <p
-              onClick={navigateToDoc}
-              className="font-bold text-md text-primary cursor-pointer"
-            >
-              {name || "Filename"}
-            </p>
-          </div>
-          <div className="flex items-center md:gap-32 gap-10">
-            <p className="text-sm text-gray-400 ml-3">
+            <Title>{name || "Filename"}</Title>
+          </ListLeft>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+            <div style={{ color: "var(--color-text-secondary)", fontSize: 14 }}>
               {date && date.toDate().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-            </p>
-            <EllipsisVertical
-              className="cursor-pointer p-1"
-              onClick={handleClick}
-            />
+            </div>
+            <IconButton style={{color: "var(--color-text-primary)"}} onClick={(e) => { e.stopPropagation(); handleClick(e); }}>
+              <EllipsisVertical stroke="var(--color-text-primary)"/>
+            </IconButton>
           </div>
-        </div>
+        </ListRow>
       )}
 
       <Menu
@@ -142,57 +213,30 @@ const DocItem = ({ id, name, date, viewType }) => {
         offsetX={-20}
         offsetY={5}
       />
-      <CustomModal
-        isOpen={deleteModalOpen}
-        onClose={handleDeleteModalClose}
-        title="Delete Document"
-      >
-        <p className="font-light text-primary">
+
+      <CustomModal isOpen={deleteModalOpen} onClose={handleDeleteModalClose} title="Delete Document">
+        <p style={{ fontWeight: 300, color: "var(--color-text-primary)" }}>
           Do you really want to delete this document?
         </p>
-        <div className="flex items-center justify-around mt-5">
-          <button
-            onClick={deleteDocument}
-            className="bg-red-500 text-white px-8 py-2 rounded-xl hover:shadow-2xl hover:bg-red-600"
-          >
-            Yes
-          </button>
-          <button
-            className="bg-white text-blue-500 px-8 py-2 rounded-xl hover:bg-gray-100"
-            onClick={() => setDeleteModalOpen(false)}
-          >
-            No
-          </button>
+        <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
+          <ActionButton danger onClick={deleteDocument}>Yes</ActionButton>
+          <ActionButton onClick={() => setDeleteModalOpen(false)}>No</ActionButton>
         </div>
       </CustomModal>
-      <CustomModal
-        isOpen={renameModalOpen}
-        onClose={handleRenameModalClose}
-        title="Rename Document"
-      >
-        <form onSubmit={(e) => e.preventDefault()}>
-          <input
+
+      <CustomModal isOpen={renameModalOpen} onClose={handleRenameModalClose} title="Rename Document">
+        <form onSubmit={(e) => { e.preventDefault(); updateName(); }}>
+          <Input
             type="text"
-            className="p-2 w-full bg-secondary rounded-lg outline-none"
             placeholder="Enter name of the document..."
             onChange={handleNameChange}
             value={newName}
           />
-          <div className="flex items-center justify-around mt-5">
-            <button
-              onClick={updateName}
-              className={`bg-blue-500 text-white px-6 py-2 rounded-xl hover:shadow-2xl hover:bg-blue-600 ${!newName && "opacity-50 cursor-not-allowed"
-                }`}
-              disabled={!newName}
-            >
+          <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
+            <ActionButton onClick={updateName} disabled={!newName} style={{ opacity: !newName ? 0.6 : 1 }}>
               Update
-            </button>
-            <button
-              className="bg-white text-blue-500 px-6 py-2 rounded-xl hover:bg-gray-100"
-              onClick={handleRenameModalClose}
-            >
-              Cancel
-            </button>
+            </ActionButton>
+            <ActionButton onClick={handleRenameModalClose}>Cancel</ActionButton>
           </div>
         </form>
       </CustomModal>
