@@ -3,9 +3,9 @@ import { AuthProvider } from "./context/AuthContext";
 
 import { AppRoute } from "./utils/routes";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import NotFound from "./pages/NotFound";
+import Home from "./pages/home";
+import Login from "./pages/login";
+import NotFound from "./pages/not-found";
 import { ThemeProvider } from "./context/ThemeContext";
 import DocsEditor from "./pages/docs/DocsEditor";
 import SpreadsheetsHome from "./pages/spreadsheets/SpreadsheetsHome";

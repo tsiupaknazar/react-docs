@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { signOut } from "firebase/auth";
 import { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -12,6 +12,7 @@ import Menu from "../common/Menu";
 import SidebarMenu from "../common/SidebarMenu";
 
 import { MenuIcon } from "lucide-react";
+import Search from "./Search";
 
 const HeaderWrapper = styled.header`
   position: sticky;
@@ -20,7 +21,6 @@ const HeaderWrapper = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
   padding: 1rem 2rem;
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
@@ -80,6 +80,48 @@ const Avatar = styled.img`
   object-fit: cover;
 `;
 
+const ModalButton = styled.button`
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+
+  ${(props) =>
+    props.variant === "danger" &&
+    css`
+      background: #ef4444;
+      color: white;
+
+      &:hover {
+        background: #dc2626;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    `}
+
+  ${(props) =>
+    props.variant === "secondary" &&
+    css`
+      background: transparent;
+      color: var(--color-text-accent);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+
+      &:hover {
+        background: rgba(96, 96, 96, 0.393);
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    `}
+`;
+
 const Header = ({ docName, setSearchInput, docId, status }) => {
   const { user, setUser } = useContext(AuthContext);
   const location = useLocation();
@@ -122,6 +164,10 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
           />
         </LeftControls>
 
+        {(location.pathname === "/" || location.pathname === "/spreadsheets") && (
+          <Search handleSearchChange={handleSearchChange} />
+        )}
+
         <RightControls>
           {status && <Status>{status}</Status>}
           <ThemeToggle />
@@ -159,35 +205,18 @@ const Header = ({ docName, setSearchInput, docId, status }) => {
       <CustomModal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Logout">
         <p style={{ fontWeight: 300 }}>Do you really want to exit?</p>
         <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
-          <button
+          <ModalButton
             onClick={logout}
-            style={{
-              flex: 1,
-              background: "#ef4444",
-              color: "white",
-              padding: "10px 16px",
-              borderRadius: 12,
-              border: "none",
-              cursor: "pointer",
-            }}
+            variant="danger"
           >
             Yes
-          </button>
-          <button
-            type="button"
+          </ModalButton>
+          <ModalButton
             onClick={() => setModalOpen(false)}
-            style={{
-              flex: 1,
-              background: "transparent",
-              color: "var(--color-text-accent)",
-              padding: "10px 16px",
-              borderRadius: 12,
-              border: "1px solid rgba(0,0,0,0.06)",
-              cursor: "pointer",
-            }}
+            variant="secondary"
           >
             No
-          </button>
+          </ModalButton>
         </div>
       </CustomModal>
     </>

@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
@@ -49,8 +55,8 @@ button {
   --color-text-accent: #3B82F6;
   --color-bg-input: #262626;
   --color-bg-button: #3B82F6;
-  --color-doc: #ececec;
-  --color-doc-hover: #525252;
+  --color-doc: #525252;
+  --color-doc-hover: #2563EB;
 }
 
 .light {

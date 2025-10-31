@@ -7,15 +7,31 @@ import { firestore } from "../../firebase/firebase";
 import DocItem from "./DocItem";
 import Loader from "../loader/Loader";
 
-import { sortDocs } from "../../utils/sortDocs";
+import { sortDocs } from "../../utils/sortFiles";
 import styled from "styled-components";
 
 const Container = styled.div`
-  display: ${(p) => (p.viewType === "grid" ? "flex" : "block")};
-  flex-wrap: ${(p) => (p.viewType === "grid" ? "wrap" : "nowrap")};
+  display: ${(p) => (p.viewType === "grid" ? "grid" : "block")};
+  width: 100%;
+
+  grid-template-columns: ${(p) =>
+    p.viewType === "grid"
+      ? "repeat(auto-fit, minmax(250px, 1fr))"
+      : "none"};
   gap: ${(p) => (p.viewType === "grid" ? "1.5rem" : "0")};
-  justify-content: ${(p) => (p.viewType === "grid" ? "flex-start" : "stretch")};
+
+  justify-content: ${(p) => (p.viewType === "grid" ? "center" : "unset")};
+  justify-items: stretch;
+
+  @media (max-width: 500px) {
+    grid-template-columns: ${(p) =>
+      p.viewType === "grid" ? "1fr" : "none"};
+    gap: ${(p) => (p.viewType === "grid" ? "1rem" : "0")};
+  }
 `;
+
+
+
 
 const Empty = styled.div`
   width: 100%;

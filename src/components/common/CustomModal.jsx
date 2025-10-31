@@ -12,9 +12,9 @@ const Backdrop = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  width: 400px;
+  width: 450px;
   max-width: 94%;
-  padding: 24px;
+  padding: 32px;
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
   box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
@@ -48,6 +48,7 @@ const Title = styled.h2`
 
 const Content = styled.div`
   margin-top: 8px;
+  padding: 10px 0;
 `;
 
 const CustomModal = ({ isOpen, onClose, title, children }) => {

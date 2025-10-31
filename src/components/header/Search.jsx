@@ -14,6 +14,8 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   transition: box-shadow 160ms ease, color 160ms ease;
 
+  min-width: 50%;
+
   &:focus-within {
     color: var(--color-text-secondary);
     box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
@@ -21,11 +23,6 @@ const Wrapper = styled.div`
 
   @media (min-width: 768px) {
     display: flex;
-    margin-left: 5rem;
-    margin-right: 5rem;
-    width: 80%;
-    min-width: 910px;
-    flex: 1 1 0%;
   }
 `;
 

@@ -7,7 +7,8 @@ const PreviewContainer = styled.div`
   border-radius: 0.25rem;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  background: var(--color-doc);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
 `;
 
 const PreviewInner = styled.div`

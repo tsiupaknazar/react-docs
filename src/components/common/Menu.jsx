@@ -26,7 +26,7 @@ const MenuItem = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: ${(p) => (p.danger ? "rgba(220,38,38,0.08)" : "var(--color-doc-hover)")};
+    background: ${(p) => (p.danger ? "rgba(255, 0, 0, 0.636)" : "var(--color-doc-hover)")};
     color: #fff;
   }
 

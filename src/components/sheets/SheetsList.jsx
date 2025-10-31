@@ -6,7 +6,7 @@ import { firestore } from "../../firebase/firebase";
 import SheetItem from "./SheetItem";
 import Loader from "../loader/Loader";
 
-import { sortDocs } from "../../utils/sortDocs";
+import { sortDocs } from "../../utils/sortFiles";
 import styled from "styled-components";
 
 const Container = styled.div`

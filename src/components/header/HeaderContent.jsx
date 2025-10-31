@@ -46,7 +46,7 @@ const EditableInput = styled.input`
   outline: none;
 `;
 
-const HeaderContent = ({ location, docName, handleSearchChange, docId }) => {
+const HeaderContent = ({ location, docName, docId }) => {
   const { user } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
 
@@ -119,9 +119,6 @@ const HeaderContent = ({ location, docName, handleSearchChange, docId }) => {
         )}
       </LeftSection>
 
-      {(location.pathname === "/" || location.pathname === "/spreadsheets") && (
-        <Search handleSearchChange={handleSearchChange} />
-      )}
 
       <ToastContainer hideProgressBar={true} closeOnClick theme={theme} />
     </HeaderWrapper>

@@ -32,7 +32,7 @@ const GridPreviewWrapper = styled.div`
 
 const CardFooter = styled.div`
   padding: 1rem;
-  border-top: 1px solid rgba(0,0,0,0.04);
+  border-top: 2px solid rgba(255, 255, 255, 0.223);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -89,6 +89,9 @@ const Input = styled.input`
   border-radius: 0.5rem;
   border: 1px solid rgba(0,0,0,0.04);
   color: var(--color-text-primary);
+  outline: none;
+  font-weight: 500;
+  font-size: 0.9rem;
 `;
 
 const ActionButton = styled.button`
@@ -98,6 +101,12 @@ const ActionButton = styled.button`
   border-radius: 0.75rem;
   border: ${(p) => (p.danger ? "none" : "1px solid rgba(0,0,0,0.06)")};
   cursor: pointer;
+  width: 50%;
+
+  &:hover {
+    background: ${(p) => (p.danger ? "#ff0000" : "var(--color-bg-button)")};
+    color: ${(p) => (p.danger ? "white" : "white")};
+  }
 `;
 
 const DocItem = ({ id, name, date, viewType }) => {
@@ -236,7 +245,7 @@ const DocItem = ({ id, name, date, viewType }) => {
             <ActionButton onClick={updateName} disabled={!newName} style={{ opacity: !newName ? 0.6 : 1 }}>
               Update
             </ActionButton>
-            <ActionButton onClick={handleRenameModalClose}>Cancel</ActionButton>
+            <ActionButton danger onClick={handleRenameModalClose}>Cancel</ActionButton>
           </div>
         </form>
       </CustomModal>

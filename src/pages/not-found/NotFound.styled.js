@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const Page = styled.section`
+export const Page = styled.section`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,7 +11,7 @@ const Page = styled.section`
   color: var(--color-text-primary);
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +22,7 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const CodeRow = styled.h2`
+export const CodeRow = styled.h2`
   margin: 0 0 1rem 0;
   font-weight: 800;
   font-size: 6rem;
@@ -32,7 +32,7 @@ const CodeRow = styled.h2`
   gap: 0.5rem;
 `;
 
-const Digit = styled.span`
+export const Digit = styled.span`
   cursor: pointer;
   transition: color 160ms ease;
   &:hover {
@@ -40,14 +40,14 @@ const Digit = styled.span`
   }
 `;
 
-const Message = styled.p`
+export const Message = styled.p`
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 1.5rem 0;
   color: var(--color-text-primary);
 `;
 
-const BackButton = styled(Link)`
+export const BackButton = styled(Link)`
   padding: 0.6rem 1.5rem;
   border-radius: 0.5rem;
   background: #2563eb;
@@ -59,23 +59,3 @@ const BackButton = styled(Link)`
     background: #1e40af;
   }
 `;
-
-const NotFound = () => {
-  return (
-    <Page>
-      <Container>
-        <CodeRow aria-hidden>
-          <Digit>4</Digit>
-          <Digit>0</Digit>
-          <Digit>4</Digit>
-        </CodeRow>
-
-        <Message>Sorry, we couldn't find this page.</Message>
-
-        <BackButton to="/">Back to home</BackButton>
-      </Container>
-    </Page>
-  );
-};
-
-export default NotFound;

@@ -19,7 +19,7 @@ const Panel = styled.aside`
   top: 0;
   z-index: 50;
   height: 100%;
-  width: 16rem; /* 64 */
+  width: 16rem;
   background: var(--color-bg-primary);
   box-shadow: 0 10px 30px rgba(2,6,23,0.2);
   transform: translateX(${(p) => (p.show ? "0" : "-100%")});
@@ -27,6 +27,11 @@ const Panel = styled.aside`
   display: flex;
   flex-direction: column;
   color: var(--color-text-primary);
+
+  /* Make fullscreen on small screens */
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const PanelHeader = styled.div`
@@ -40,18 +45,28 @@ const PanelHeader = styled.div`
 const Title = styled.div`
   font-size: 1rem;
   font-weight: 600;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
 `;
 
 const CloseButton = styled.button`
-  padding: 6px;
+  padding: 8px 10px;
   border-radius: 6px;
   background: transparent;
   border: none;
   cursor: pointer;
   color: inherit;
+  font-size: 1.25rem;
 
   &:hover {
     background: var(--color-bg-secondary);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
   }
 `;
 
@@ -81,12 +96,37 @@ const NavItem = styled(Link)`
     outline: 2px solid rgba(59,130,246,0.25);
     outline-offset: 2px;
   }
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 const IconWrapper = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+`;
+
+const TextIcon = styled(FileText)`
+  width: 20px;
+  height: 20px;
+  color: #4385f3;
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
+`;
+const SpreadsheetIcon = styled(FileSpreadsheet)`
+  width: 20px;
+  height: 20px;
+  color: #22c55e;
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 const SidebarMenu = ({ isOpen, onClose }) => {
@@ -134,12 +174,12 @@ const SidebarMenu = ({ isOpen, onClose }) => {
 
         <Nav>
           <NavItem to="/" onClick={onClose}>
-            <IconWrapper><FileText size={20} color="#4385F3" /></IconWrapper>
+            <IconWrapper><TextIcon /></IconWrapper>
             Docs
           </NavItem>
 
           <NavItem to="/spreadsheets" onClick={onClose}>
-            <IconWrapper><FileSpreadsheet size={20} color="#22c55e" /></IconWrapper>
+            <IconWrapper><SpreadsheetIcon /></IconWrapper>
             Spreadsheets
           </NavItem>
         </Nav>
@@ -149,4 +189,3 @@ const SidebarMenu = ({ isOpen, onClose }) => {
 };
 
 export default SidebarMenu;
-// ...existing code...
